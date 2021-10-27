@@ -1,51 +1,42 @@
 <template>
     <div>
         The is device page
-        <Row :gutter="20" style="margin-top: 10px;">
-            <i-col :md="24" :lg="8" style="margin-bottom: 20px;">
-                <Card shadow>
-                <chart-pie style="height: 300px;" :value="pieData" text="用户访问来源"></chart-pie>
-                </Card>
-            </i-col>
-            <i-col :md="24" :lg="16" style="margin-bottom: 20px;">
-                <Card shadow>
-                <chart-bar style="height: 300px;" :value="barData" text="每周用户活跃量"/>
-                </Card>
-            </i-col>
-        </Row>
+        <div v-for="device in deviceList" v-bind:key="device" style="padding: 10px;background: #f8f8f9">
+            {{ device }}
+            <Card title="Options" icon="ios-options" :padding="0" shadow style="width: 300px;">
+                <CellGroup>
+                    <Cell title="Only show titles" />
+                    <Cell title="Display label content" label="label content" />
+                    <Cell title="Display right content" extra="details" />
+                    <Cell title="Link" extra="details" to="/components/button" />
+                    <Cell title="Open link in new window" to="/components/button" target="_blank" />
+                    <Cell title="Disabled" disabled />
+                    <Cell title="Selected" selected />
+                    <Cell title="With Badge" to="/components/badge">
+                        <Badge :count="10" slot="extra" />
+                    </Cell>
+                    
+                </CellGroup>
+            </Card>
+        </div>
     </div>
 </template>
 
 <script>
-import { ChartPie, ChartBar } from '_c/charts'
+import { mapState } from 'vuex'
 export default {
     name: 'device',
     components: {
-        ChartPie, 
-        ChartBar
+
     },
-    data() {
-        return {
-            pieData: [
-                { value: 335, name: '直接访问' },
-                { value: 310, name: '邮件营销' },
-                { value: 234, name: '联盟广告' },
-                { value: 135, name: '视频广告' },
-                { value: 1548, name: '搜索引擎' }
-            ],
-            barData: {
-                Mon: 13253,
-                Tue: 34235,
-                Wed: 26321,
-                Thu: 12340,
-                Fri: 24643,
-                Sat: 1322,
-                Sun: 1324
-            }
-        }
+    computed: {
+        ...mapState({
+            deviceList: state => state.device.deviceList,
+        })
     },
     mounted() {
-        
+        // console.log(this.$route)
+        console.log(this.deviceList)
     }
 }
 </script>
