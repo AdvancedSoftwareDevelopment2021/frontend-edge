@@ -73,5 +73,25 @@ export default [
       hideInMenu: true
     },
     component: () => import('@/view/error-page/404.vue')
-  }
+  },
+  {
+    path: '/device',
+    component: Main,
+    meta: {
+      hideInMenu: true,
+      notCache: true
+    },
+    children: [
+      {
+        path: '/device',
+        name: 'device',
+        meta: {
+          hideInMenu: true,
+          title: '设备',
+          notCache: true,
+        },
+        component: () => import('@/view/device/device.vue')
+      }
+    ]
+  },
 ]
