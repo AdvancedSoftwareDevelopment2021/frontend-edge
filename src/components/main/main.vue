@@ -151,7 +151,6 @@ export default {
   },
   watch: {
     '$route' (newRoute) {
-      // console.log(this.$route)
       const { name, query, params, meta } = newRoute
       this.addTag({
         route: { name, query, params, meta },
@@ -166,7 +165,6 @@ export default {
     /**
      * @description 初始化设置面包屑导航和标签导航
      */
-    // console.log(this.$route)
     this.setTagNavList()
     this.setHomeRoute(routers)
     const { name, params, query, meta } = this.$route
