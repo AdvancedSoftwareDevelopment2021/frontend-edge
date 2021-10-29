@@ -12,7 +12,10 @@ export default {
 
     },
     mutations: {
-
+        addDevice (state, newDevice) {
+            state.deviceList.push(newDevice)
+        }
+        // TODO: 發給後端保存
     },
     actions: {
 

@@ -9,58 +9,19 @@
                 v-model="modalControl"
                 title="新增设备"
                 :loading="loading"
-                @on-ok="asyncOK">
+                @on-ok="modalComfirmBtnClick">
                 <Form :model="formItem" :label-width="80">
-                    <FormItem label="Input">
-                        <Input v-model="formItem.input" placeholder="Enter something..."></Input>
+                    <FormItem label="设备名字">
+                        <Input v-model="formItem.name"></Input>
                     </FormItem>
-                    <FormItem label="Select">
-                        <Select v-model="formItem.select">
-                            <Option value="beijing">New York</Option>
-                            <Option value="shanghai">London</Option>
-                            <Option value="shenzhen">Sydney</Option>
-                        </Select>
+                    <FormItem label="类型">
+                        <Input v-model="formItem.category"></Input>
                     </FormItem>
-                    <FormItem label="DatePicker">
-                        <Row>
-                            <Col span="11">
-                                <DatePicker type="date" placeholder="Select date" v-model="formItem.date"></DatePicker>
-                            </Col>
-                            <Col span="2" style="text-align: center">-</Col>
-                            <Col span="11">
-                                <TimePicker type="time" placeholder="Select time" v-model="formItem.time"></TimePicker>
-                            </Col>
-                        </Row>
+                    <FormItem label="型号">
+                        <Input v-model="formItem.model"></Input>
                     </FormItem>
-                    <FormItem label="Radio">
-                        <RadioGroup v-model="formItem.radio">
-                            <Radio label="male">Male</Radio>
-                            <Radio label="female">Female</Radio>
-                        </RadioGroup>
-                    </FormItem>
-                    <FormItem label="Checkbox">
-                        <CheckboxGroup v-model="formItem.checkbox">
-                            <Checkbox label="Eat"></Checkbox>
-                            <Checkbox label="Sleep"></Checkbox>
-                            <Checkbox label="Run"></Checkbox>
-                            <Checkbox label="Movie"></Checkbox>
-                        </CheckboxGroup>
-                    </FormItem>
-                    <FormItem label="Switch">
-                        <i-switch v-model="formItem.switch" size="large">
-                            <span slot="open">On</span>
-                            <span slot="close">Off</span>
-                        </i-switch>
-                    </FormItem>
-                    <FormItem label="Slider">
-                        <Slider v-model="formItem.slider" range></Slider>
-                    </FormItem>
-                    <FormItem label="Text">
-                        <Input v-model="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-                    </FormItem>
-                    <FormItem>
-                        <Button type="primary">Submit</Button>
-                        <Button style="margin-left: 8px">Cancel</Button>
+                    <FormItem label="更多信息">
+                        <Input v-model="formItem.info" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
                     </FormItem>
                 </Form>
             </Modal>
@@ -89,7 +50,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 export default {
     name: 'device',
     components: {
@@ -100,15 +61,10 @@ export default {
             modalControl: false,
             loading: true,
             formItem: {
-                input: '',
-                select: '',
-                radio: 'male',
-                checkbox: [],
-                switch: true,
-                date: '',
-                time: '',
-                slider: [20, 50],
-                textarea: ''
+                name: '',
+                category: '',
+                medel: '',
+                info: ''
             }
         }
     },
@@ -118,6 +74,9 @@ export default {
         })
     },
     methods: {
+        ...mapMutations([
+            'addDevice'
+        ]),
         handleStatus (status) {
             let ret = ''
             switch(status) {
@@ -146,15 +105,23 @@ export default {
             }
             return ret
         },
-        asyncOK () {
+        modalComfirmBtnClick () {
+            const { name, model, category, info } = this.formItem
+            // TODO: 數據內容檢查, try catch
+            let newDevice = {
+                name,
+                model,
+                category,
+                status: 1
+            }
             setTimeout(() => {
+                this.addDevice(newDevice)
                 this.modalControl = false;
-            }, 2000);
+            }, 1000);
         }
     },
     mounted() {
-        // console.log(this.$route)
-        console.log(this.deviceList)
+
     }
 }
 </script>
