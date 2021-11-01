@@ -1,30 +1,7 @@
 <template>
     <div>
         <Row style="margin: 0 1%">
-            <Button type="primary" @click="modalControl = true">
-                <Icon type="ios-add-circle-outline" />
-                新增设备
-            </Button>
-            <Modal
-                v-model="modalControl"
-                title="新增设备"
-                :loading="loading"
-                @on-ok="modalComfirmBtnClick">
-                <Form :model="formItem" :label-width="80">
-                    <FormItem label="设备名字">
-                        <Input v-model="formItem.name"></Input>
-                    </FormItem>
-                    <FormItem label="类型">
-                        <Input v-model="formItem.category"></Input>
-                    </FormItem>
-                    <FormItem label="型号">
-                        <Input v-model="formItem.model"></Input>
-                    </FormItem>
-                    <FormItem label="更多信息">
-                        <Input v-model="formItem.info" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-                    </FormItem>
-                </Form>
-            </Modal>
+            <add-device />
         </Row>
         <Row>
         <Col span="7" v-for="device in deviceList" v-bind:key="device.id" style="padding: 10px;background: #f8f8f9">
@@ -50,22 +27,16 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
+import addDevice from '_c/add-device'
 export default {
     name: 'device',
     components: {
-
+        addDevice
     },
     data () {
         return {
-            modalControl: false,
-            loading: true,
-            formItem: {
-                name: '',
-                category: '',
-                medel: '',
-                info: ''
-            }
+            
         }
     },
     computed: {
@@ -74,9 +45,6 @@ export default {
         })
     },
     methods: {
-        ...mapMutations([
-            'addDevice'
-        ]),
         handleStatus (status) {
             let ret = ''
             switch(status) {
@@ -105,20 +73,6 @@ export default {
             }
             return ret
         },
-        modalComfirmBtnClick () {
-            const { name, model, category, info } = this.formItem
-            // TODO: 數據內容檢查, try catch
-            let newDevice = {
-                name,
-                model,
-                category,
-                status: 1
-            }
-            setTimeout(() => {
-                this.addDevice(newDevice)
-                this.modalControl = false;
-            }, 1000);
-        }
     },
     mounted() {
 
