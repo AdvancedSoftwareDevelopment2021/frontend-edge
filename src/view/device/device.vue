@@ -1,51 +1,81 @@
 <template>
     <div>
-        The is device page
-        <Row :gutter="20" style="margin-top: 10px;">
-            <i-col :md="24" :lg="8" style="margin-bottom: 20px;">
-                <Card shadow>
-                <chart-pie style="height: 300px;" :value="pieData" text="用户访问来源"></chart-pie>
-                </Card>
-            </i-col>
-            <i-col :md="24" :lg="16" style="margin-bottom: 20px;">
-                <Card shadow>
-                <chart-bar style="height: 300px;" :value="barData" text="每周用户活跃量"/>
-                </Card>
-            </i-col>
+        <Row style="margin: 0 1%">
+            <add-device />
+        </Row>
+        <Row>
+        <Col span="7" v-for="device in deviceList" v-bind:key="device.id" style="padding: 10px;background: #f8f8f9">
+            <Card :title="device.name" icon="ios-information-circle-outline" :padding="0" shadow style="width: 300px;">
+                <!-- <Badge dot slot="extra">
+                    <a href="#" class="demo-badge"></a>
+                </Badge> -->
+                <Badge :status="handleStatus(device.status)" slot="extra">
+                    <a href="#" class="demo-badge"></a>
+                </Badge>
+                <CellGroup>
+                    <Cell :title="'类型: ' + device.category" />
+                    <Cell :title="'型号: ' + device.model" />
+                    <Cell title="设备状态">
+                        <span slot="extra" v-html="handleStatusCell(device.status)" />
+                    </Cell>
+                    <Cell title="更多信息" :to="'/device/detail'" />
+                </CellGroup>
+            </Card>
+        </Col>
         </Row>
     </div>
 </template>
 
 <script>
-import { ChartPie, ChartBar } from '_c/charts'
+import { mapState } from 'vuex'
+import addDevice from '_c/add-device'
 export default {
     name: 'device',
     components: {
-        ChartPie, 
-        ChartBar
+        addDevice
     },
-    data() {
+    data () {
         return {
-            pieData: [
-                { value: 335, name: '直接访问' },
-                { value: 310, name: '邮件营销' },
-                { value: 234, name: '联盟广告' },
-                { value: 135, name: '视频广告' },
-                { value: 1548, name: '搜索引擎' }
-            ],
-            barData: {
-                Mon: 13253,
-                Tue: 34235,
-                Wed: 26321,
-                Thu: 12340,
-                Fri: 24643,
-                Sat: 1322,
-                Sun: 1324
-            }
+            
         }
     },
+    computed: {
+        ...mapState({
+            deviceList: state => state.device.deviceList,
+        })
+    },
+    methods: {
+        handleStatus (status) {
+            let ret = ''
+            switch(status) {
+                case 1: {
+                    ret = "success"
+                    break
+                }
+                case 2: {
+                    ret = "error"
+                    break
+                }
+            }
+            return ret
+        },
+        handleStatusCell (statue) {
+            let ret = ''
+            switch(statue) {
+                case 1: {
+                    ret = '<span style="color: green">空闲</span>'
+                    break
+                }
+                case 2: {
+                    ret = '<span style="color: red">出错</span>'
+                    break
+                }
+            }
+            return ret
+        },
+    },
     mounted() {
-        
+
     }
 }
 </script>
