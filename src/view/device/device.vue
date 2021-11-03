@@ -1,11 +1,19 @@
 <template>
     <div>
         <Row style="margin: 0 1%">
-            <add-device />
+            <Col span="2">
+                <add-device />
+            </Col>
+            <Col span="10">
+                <Input v-model="searchInput" search placeholder="输入设备名字搜索设备" />
+            </Col>
+            <Col span="2">
+                <div>{{ searchInput }}</div>
+            </Col>
         </Row>
         <Row>
-        <Col span="7" v-for="device in deviceList" v-bind:key="device.id" style="padding: 10px;background: #f8f8f9">
-            <Card :title="device.name" icon="ios-information-circle-outline" :padding="0" shadow style="width: 300px;">
+        <Col span="6" v-for="device in deviceList" v-bind:key="device.id" style="padding: 10px;background: #f8f8f9">
+            <Card :title="device.name" icon="ios-information-circle-outline" :padding="0" shadow style="width: 300px; padding: 0 0 3% 0">
                 <!-- <Badge dot slot="extra">
                     <a href="#" class="demo-badge"></a>
                 </Badge> -->
@@ -18,8 +26,16 @@
                     <Cell title="设备状态">
                         <span slot="extra" v-html="handleStatusCell(device.status)" />
                     </Cell>
-                    <Cell title="更多信息" :to="'/device/detail'" />
+                    <!-- TODO: route to detail modalView -->
                 </CellGroup>
+                <Row type="flex" justify="space-around">
+                    <Col span="10">
+                        <Button type="error" long>删除设备</Button>
+                    </Col>
+                    <Col span="10">
+                        <Button type="info" long>修改设备信息</Button>
+                    </Col>
+                </Row>
             </Card>
         </Col>
         </Row>
@@ -36,7 +52,7 @@ export default {
     },
     data () {
         return {
-            
+            searchInput: ''
         }
     },
     computed: {
@@ -49,7 +65,7 @@ export default {
             let ret = ''
             switch(status) {
                 case 1: {
-                    ret = "success"
+                    ret = "processing"
                     break
                 }
                 case 2: {
