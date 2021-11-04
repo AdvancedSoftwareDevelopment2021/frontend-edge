@@ -33,7 +33,7 @@
                         <Button type="error" long>删除设备</Button>
                     </Col>
                     <Col span="10">
-                        <Button type="info" long>修改设备信息</Button>
+                        <Button type="info" long @click="editDeviceBtnClick(device.id)">修改设备信息</Button>
                     </Col>
                 </Row>
             </Card>
@@ -61,7 +61,7 @@ export default {
         })
     },
     methods: {
-        handleStatus (status) {
+        handleStatus(status) {
             let ret = ''
             switch(status) {
                 case 1: {
@@ -75,7 +75,7 @@ export default {
             }
             return ret
         },
-        handleStatusCell (statue) {
+        handleStatusCell(statue) {
             let ret = ''
             switch(statue) {
                 case 1: {
@@ -89,6 +89,9 @@ export default {
             }
             return ret
         },
+        editDeviceBtnClick(id) {
+            console.log(typeof id, id)
+        }
     },
     mounted() {
 
