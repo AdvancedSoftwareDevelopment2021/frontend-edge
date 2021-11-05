@@ -1,6 +1,5 @@
 export default {
   state: {
-    newDeviceID: 6,
     deviceList: [
       {
         id: 1,
@@ -44,11 +43,11 @@ export default {
       }
     ],
     formItem: {
-      id: "",
-      name: "",
-      category: "",
-      medel: "",
-      info: "",
+      id: 6,
+      name: "test1",
+      category: "test2",
+      model: "test3",
+      info: "test4",
       status: 1
     }
   },
@@ -61,17 +60,12 @@ export default {
         //TODO:
     },
     addDevice(state, newDevice) {
-      state.formItem = {
-        ...state.formItem,
-        id: state.newDeviceID
-      };
-      state.newDeviceID += 1;
       state.deviceList.push(state.formItem);
       state.formItem = {
-        id: state.newDeviceID,
+        id: state.formItem.id + 1,
         name: "",
         category: "",
-        medel: "",
+        model: "",
         info: "",
         status: 1
       };

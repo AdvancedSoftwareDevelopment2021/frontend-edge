@@ -2,13 +2,10 @@
     <div>
         <Row style="margin: 0 1%">
             <Col span="2">
-                <add-device />
+                <add-device :deviceInfo="formItem" />
             </Col>
             <Col span="10">
                 <Input v-model="searchInput" search placeholder="输入设备名字搜索设备" />
-            </Col>
-            <Col span="2">
-                <div>{{ searchInput }}</div>
             </Col>
         </Row>
         <Row>
@@ -26,14 +23,20 @@
                     <Cell title="设备状态">
                         <span slot="extra" v-html="handleStatusCell(device.status)" />
                     </Cell>
-                    <!-- TODO: route to detail modalView -->
                 </CellGroup>
                 <Row type="flex" justify="space-around">
                     <Col span="10">
                         <Button type="error" long>删除设备</Button>
                     </Col>
                     <Col span="10">
-                        <Button type="info" long @click="editDeviceBtnClick(device.id)">修改设备信息</Button>
+                    <!-- TODO: 所有設備內容只顯示deviceList[-1] -->
+                        <Button type="info" long @click="editDeviceBtnClick(device.id-1)">修改设备信息</Button>
+                        <Modal
+                            v-model="modalControl"
+                            title="修改设备"
+                            @on-ok="modalComfirmBtnClick">
+                            <device-info-form :deviceInfo="activeDeivce"/>
+                        </Modal>
                     </Col>
                 </Row>
             </Card>
@@ -45,20 +48,25 @@
 <script>
 import { mapState } from 'vuex'
 import addDevice from '_c/add-device'
+import deviceInfoForm from '_c/device-info-form'
 export default {
     name: 'device',
     components: {
-        addDevice
+        addDevice,
+        deviceInfoForm
     },
     data () {
         return {
-            searchInput: ''
+            searchInput: '',
+            modalControl: false,
+            activeDeivce: null,
         }
     },
     computed: {
         ...mapState({
             deviceList: state => state.device.deviceList,
-        })
+            formItem: state => state.device.formItem
+        }),
     },
     methods: {
         handleStatus(status) {
@@ -90,11 +98,15 @@ export default {
             return ret
         },
         editDeviceBtnClick(id) {
-            console.log(typeof id, id)
+            this.modalControl = true
+            this.activeDeivce = this.deviceList[id]
+        },
+        modalComfirmBtnClick() {
+            
         }
     },
     mounted() {
-
+        this.activeDeivce = this.deviceList[0]
     }
 }
 </script>

@@ -18,6 +18,11 @@
 import { mapMutations } from 'vuex'
 export default {
     name: 'deviceInfoForm',
+    props: {
+        deviceInfo: {
+            type: Object,
+        }
+    },
     data () {
         return {
         }
@@ -28,7 +33,7 @@ export default {
         // })
         name: {
             get() {
-                return this.$store.state.device.formItem.name
+                return this.deviceInfo.name
             },
             set(value) {
                 this.modifyFormItem({name: value})
@@ -36,7 +41,7 @@ export default {
         },
         category: {
             get() {
-                return this.$store.state.device.formItem.category
+                return this.deviceInfo.category
             },
             set(value) {
                 this.modifyFormItem({category: value})
@@ -44,7 +49,7 @@ export default {
         },
         model: {
             get() {
-                return this.$store.state.device.formItem.model
+                return this.deviceInfo.model
             },
             set(value) {
                 this.modifyFormItem({model: value})
@@ -52,7 +57,7 @@ export default {
         },
         info: {
             get() {
-                return this.$store.state.device.formItem.info
+                return this.deviceInfo.info
             },
             set(value) {
                 this.modifyFormItem({info: value})

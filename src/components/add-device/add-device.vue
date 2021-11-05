@@ -9,7 +9,7 @@
             title="新增设备"
             :loading="loading"
             @on-ok="modalComfirmBtnClick">
-            <device-info-form />
+            <device-info-form :deviceInfo="deviceInfo"/>
         </Modal>
     </div>
 </template>
@@ -20,6 +20,11 @@ export default {
     name: 'addDevice',
     components: {
         deviceInfoForm
+    },
+    props: {
+        deviceInfo: {
+            type: Object
+        }
     },
     data () {
         return {
