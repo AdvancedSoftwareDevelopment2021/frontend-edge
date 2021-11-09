@@ -15,7 +15,7 @@
     </Form>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
     name: 'deviceInfoForm',
     props: {

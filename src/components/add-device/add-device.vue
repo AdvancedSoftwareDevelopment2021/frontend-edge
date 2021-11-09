@@ -8,13 +8,14 @@
             v-model="modalControl"
             title="新增设备"
             :loading="loading"
-            @on-ok="modalComfirmBtnClick">
+            @on-ok="modalComfirmBtnClick"
+            @on-cancel="modalCancelBtnClick">
             <device-info-form :deviceInfo="deviceInfo"/>
         </Modal>
     </div>
 </template>
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import deviceInfoForm from '_c/device-info-form';
 export default {
     name: 'addDevice',
@@ -33,27 +34,22 @@ export default {
         }
     },
     computed: {
-        ...mapState({
-            formItem: state => state.device.formItem
-        })
     },
     methods: {
         ...mapMutations([
+            'initFormItem'
+        ]),
+        ...mapActions([
             'addDevice'
         ]),
         modalComfirmBtnClick () {
-            const { name, model, category, info } = this.formItem
-            // TODO: 數據內容檢查, try catch
-            let newDevice = {
-                name,
-                model,
-                category,
-                status: 1
-            }
             setTimeout(() => {
-                this.addDevice(newDevice)
+                this.addDevice()
                 this.modalControl = false;
             }, 1000);
+        },
+        modalCancelBtnClick() {
+            this.initFormItem()
         }
     }
 }
