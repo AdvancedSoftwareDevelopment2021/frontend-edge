@@ -84,91 +84,91 @@
   </div>
 </template>
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from 'vuex'
 export default {
-  name: "deviceInfoForm",
+  name: 'deviceInfoForm',
   components: {},
   props: {
     deviceInfo: {
-      type: Object,
-    },
+      type: Object
+    }
   },
-  data() {
+  data () {
     return {
       valueIndex: 1,
       formItem: {
-        name: "",
-        model: "",
-        description: "",
+        name: '',
+        model: '',
+        description: '',
         status: 1,
         values: [
           {
             valueIndex: 1,
-            name: "",
-            type: "",
-            protocol: "",
-          },
-        ],
-      },
-    };
+            name: '',
+            type: '',
+            protocol: ''
+          }
+        ]
+      }
+    }
   },
   computed: {
     ...mapState({
       deviceDataTypeList: (state) => state.device.deviceDataTypeList,
-      deviceDataProtocolList: (state) => state.device.deviceDataProtocolList,
-    }),
+      deviceDataProtocolList: (state) => state.device.deviceDataProtocolList
+    })
   },
   methods: {
-    ...mapMutations(["modifyFormItem"]),
-    ...mapActions(["addDevice"]),
-    comfirmSlotClick() {
+    ...mapMutations(['modifyFormItem']),
+    ...mapActions(['addDevice']),
+    comfirmSlotClick () {
       // TODO: 为了去除values中的每个valuesIndex而出现以下令血压上升的代码(valuesIndex可能没有用), 或者可以改用delete values -> valueIndex
       let values = this.formItem.values
       values = values.map((item) => {
-          return {
-              name: item.name, 
-              type: item.type, 
-              protocol: item.protocol
-            }
-        })
+        return {
+          name: item.name,
+          type: item.type,
+          protocol: item.protocol
+        }
+      })
       this.addDevice({
-          name: this.formItem.name,
-          model: this.formItem.model,
-          description: this.formItem.description,
-          values
+        name: this.formItem.name,
+        model: this.formItem.model,
+        description: this.formItem.description,
+        values
       })
       this.resetFormItem()
     },
-    resetFormItem() {
+    resetFormItem () {
       this.valueIndex = 1
       this.formItem = {
-        name: "",
-        model: "",
-        description: "",
+        name: '',
+        model: '',
+        description: '',
         status: 1,
         values: [
           {
             valueIndex: 1,
-            name: "",
-            type: "",
-            protocol: "",
-          },
-        ],
+            name: '',
+            type: '',
+            protocol: ''
+          }
+        ]
       }
     },
-    handleAdd() {
-      this.valueIndex++;
+    handleAdd () {
+      this.valueIndex++
       this.formItem.values.push({
         valueIndex: this.valueIndex,
-        name: "",
-        type: "",
-        protocol: "",
-      });
+        name: '',
+        type: '',
+        protocol: ''
+      })
     },
-    handleRemove(listIndex) {
-      console.log("Delete listItem: " + listIndex);
-      this.formItem.values.splice(listIndex, 1);
-    },
-  },
-};
+    handleRemove (listIndex) {
+      console.log('Delete listItem: ' + listIndex)
+      this.formItem.values.splice(listIndex, 1)
+    }
+  }
+}
 </script>
