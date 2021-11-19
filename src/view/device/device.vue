@@ -4,6 +4,7 @@
             <Col span="2">
                 <add-device :deviceInfo="formItem" />
             </Col>
+            <!-- TODO: 实现search 功能 -->
             <Col span="10">
                 <Input v-model="searchInput" search placeholder="输入设备名字搜索设备" />
             </Col>

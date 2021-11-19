@@ -1,3 +1,6 @@
+// values -> type: Integer、String、Object、Boolean
+// values -> protocol: MODBUS、CANBUS、ZIGBEE、WEBSOCKET、HTTP
+
 export default {
   state: {
     deviceList: [
@@ -5,7 +8,7 @@ export default {
         id: 1,
         name: 'machine1',
         model: 'RTX1',
-        category: '加热器',
+        // category: '加热器',
         description: '',
         status: 1,
         values: [
@@ -20,7 +23,7 @@ export default {
         id: 2,
         name: 'machine2',
         model: 'RTX2',
-        category: '加热器',
+        // category: '加热器',
         description: '',
         status: 1,
         values: [
@@ -35,7 +38,7 @@ export default {
         id: 3,
         name: 'machine3',
         model: 'RTX3',
-        category: '加热器',
+        // category: '加热器',
         description: '',
         status: 2,
         values: [
@@ -50,7 +53,7 @@ export default {
         id: 4,
         name: 'machine4',
         model: 'RTX4',
-        category: '加热器',
+        // category: '加热器',
         description: '',
         status: 2,
         values: [
@@ -65,7 +68,7 @@ export default {
         id: 5,
         name: 'machine5',
         model: 'RTX5',
-        category: '加热器',
+        // category: '加热器',
         description: '',
         status: 1,
         values: [
@@ -80,7 +83,7 @@ export default {
     _formItem: {
       id: null,
       name: 'test1',
-      category: 'test2',
+      // category: 'test2',
       model: 'test3',
       description: 'test4',
       status: 1,
@@ -92,11 +95,52 @@ export default {
         }
       ]
     },
-    _newFormItemID: 6
+    _newFormItemID: 5,
+    deviceDataTypeList: [
+      {
+        value: 'Integer',
+        label: 'Integer'
+      },
+      {
+        value: 'String',
+        label: 'String'
+      },
+      {
+        value: 'Object',
+        label: 'Object'
+      },
+      {
+        value: 'Boolean',
+        label: 'Boolean'
+      }
+    ],
+    deviceDataProtocolList: [
+      {
+        value: 'MODBUS',
+        label: 'MODBUS'
+      },
+      {
+        value: 'CANBUS',
+        label: 'CANBUS'
+      },
+      {
+        value: 'ZIGBEE',
+        label: 'ZIGBEE'
+      },
+      {
+        value: 'WEBSOCKET',
+        label: 'WEBSOCKET'
+      },
+      {
+        value: 'HTTP',
+        label: 'HTTP'
+      }
+    ]
   },
   getters: {
     newFormItemID (state) {
       // TODO: 改做闭包？
+      state._newFormItemID += 1
       return state._newFormItemID
     },
     formItem (state, getters) {
@@ -126,13 +170,19 @@ export default {
     }
   },
   actions: {
-    addDevice ({ state, commit, getters }) {
+    addDevice ({ state, commit, getters }, newState) {
       // TODO: 數據內容檢查, try catch
-      const formItem = getters.formItem
-      console.log(`Add ${formItem.id}`)
-      state._newFormItemID += 1
+      // const formItem = getters.formItem
+      // console.log(`Add ${formItem.id}`)
+      // state._newFormItemID += 1
+      // state.deviceList.push(formItem)
+      // commit('initFormItem')
+
+      const deviceId = getters.newFormItemID
+      console.log(`Add ${deviceId}`)
+      const formItem = { ...newState, id: deviceId }
       state.deviceList.push(formItem)
-      commit('initFormItem')
+      console.log(state.deviceList)
       // TODO: 发给后端存入数据库
     },
     modifyDeviceList ({ state, commit }) {

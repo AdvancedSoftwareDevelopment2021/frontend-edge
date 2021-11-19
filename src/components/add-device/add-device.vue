@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import deviceInfoForm from '_c/device-info-form'
 export default {
   name: 'addDevice',
@@ -42,22 +42,22 @@ export default {
   computed: {
   },
   methods: {
-    ...mapMutations([
-      'initFormItem'
-    ]),
-    ...mapActions([
-      'addDevice'
-    ]),
+    // ...mapMutations([
+    //   'initFormItem'
+    // ]),
+    // ...mapActions([
+    //   'addDevice'
+    // ]),
     modalComfirmBtnClick () {
       this.loading = true
       setTimeout(() => {
-        this.addDevice()
+        // this.addDevice()
         this.loading = false
         this.modalControl = false
       }, 1000)
     },
     modalCancelBtnClick () {
-      this.initFormItem()
+    //   this.initFormItem()
       this.modalControl = false
     }
   }
