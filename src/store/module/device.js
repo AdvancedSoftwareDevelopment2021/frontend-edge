@@ -13,9 +13,10 @@ export default {
         status: 1,
         values: [
           {
+            'valueIndex': 1,
             'name': 'name',
             'type': 'String',
-            'messageProtocol': 'MODBUS'
+            'protocol': 'MODBUS'
           }
         ]
       },
@@ -25,12 +26,13 @@ export default {
         model: 'RTX2',
         // category: '加热器',
         description: '',
-        status: 1,
+        status: 2,
         values: [
           {
+            'valueIndex': 1,
             'name': 'name',
             'type': 'String',
-            'messageProtocol': 'MODBUS'
+            'protocol': 'MODBUS'
           }
         ]
       },
@@ -40,12 +42,13 @@ export default {
         model: 'RTX3',
         // category: '加热器',
         description: '',
-        status: 2,
+        status: 3,
         values: [
           {
+            'valueIndex': 1,
             'name': 'name',
             'type': 'String',
-            'messageProtocol': 'MODBUS'
+            'protocol': 'MODBUS'
           }
         ]
       },
@@ -58,9 +61,10 @@ export default {
         status: 2,
         values: [
           {
+            'valueIndex': 1,
             'name': 'name',
             'type': 'String',
-            'messageProtocol': 'MODBUS'
+            'protocol': 'MODBUS'
           }
         ]
       },
@@ -70,12 +74,13 @@ export default {
         model: 'RTX5',
         // category: '加热器',
         description: '',
-        status: 1,
+        status: 3,
         values: [
           {
+            'valueIndex': 1,
             'name': 'name',
             'type': 'String',
-            'messageProtocol': 'MODBUS'
+            'protocol': 'MODBUS'
           }
         ]
       }
@@ -86,16 +91,17 @@ export default {
       // category: 'test2',
       model: 'test3',
       description: 'test4',
-      status: 1,
+      status: 2,
       values: [
         {
-          'name': 'name/id/passwd',
-          'type': 'Integer、String、Object、Boolean',
-          'messageProtocol': 'MODBUS、CANBUS、ZIGBEE、WEBSOCKET、HTTP'
+          'valueIndex': 1,
+          'name': 'name',
+          'type': 'String',
+          'protocol': 'WEBSOCKET'
         }
       ]
     },
-    _newFormItemID: 5,
+    newFormItemID: 5,
     deviceDataTypeList: [
       {
         value: 'Integer',
@@ -138,64 +144,33 @@ export default {
     ]
   },
   getters: {
-    newFormItemID (state) {
-      // TODO: 改做闭包？
-      state._newFormItemID += 1
-      return state._newFormItemID
-    },
     formItem (state, getters) {
-      return { ...state._formItem, id: getters.newFormItemID }
+      return { ...state._formItem }
     }
   },
   mutations: {
-    initFormItem (state) {
-      // console.log('Initial FormItem')
-      state._formItem = {
-        id: null,
-        name: 'test1',
-        category: 'test2',
-        model: 'test3',
-        description: 'test4',
-        status: 1
-      }
-    },
-    modifyFormItem (state, newState) {
-      // const formItem = getters.formItem
-      state._formItem = { ...state._formItem, ...newState }
-    },
-    deleteDevice (state, { id }) {
-      // FIXME: delete by id
-      const deleteItem = state.deviceList.splice(id, 1)
-      console.log(`Delete ${deleteItem.id}`)
+    deleteDevice (state, listId) {
+      // FIXME: delete by listId
+      const deleteItem = state.deviceList.splice(listId, 1)
+      console.log(`Delete device ${JSON.stringify(deleteItem)}`)
     }
   },
   actions: {
     addDevice ({ state, commit, getters }, newState) {
       // TODO: 數據內容檢查, try catch
-      // const formItem = getters.formItem
-      // console.log(`Add ${formItem.id}`)
-      // state._newFormItemID += 1
-      // state.deviceList.push(formItem)
-      // commit('initFormItem')
-
-      const deviceId = getters.newFormItemID
+      state.newFormItemID += 1
+      const deviceId = state.newFormItemID
       console.log(`Add ${deviceId}`)
       const formItem = { ...newState, id: deviceId }
       state.deviceList.push(formItem)
-      console.log(state.deviceList)
+      console.log(`Add device ${JSON.stringify(formItem)}`)
       // TODO: 发给后端存入数据库
     },
-    modifyDeviceList ({ state, commit }) {
-      // 因为device.id作为的key，为了不改变key，故有以下令人血压上升的代码
-      const { name, category, model, description } = state._formItem
-      state.deviceList[state._formItem.id - 1] = {
-        ...state.deviceList[state._formItem.id - 1],
-        name,
-        category,
-        model,
-        description
-      }
-      commit('initFormItem')
+    modifyDeviceList ({ state, commit }, newState) {
+      const indexOfDevice = state.deviceList.map((device) => (device.id)).indexOf(newState.id)
+      // console.log(state.deviceList[indexOfDevice])
+      state.deviceList[indexOfDevice] = newState
+      console.log(`Modify device: ${JSON.stringify(newState)}`)
     }
   }
 }

@@ -25,10 +25,10 @@
         :prop="'items.' + listIndex + '.value'"
       >
         <Row gutter="10">
-          <Col span="6">
+          <Col span="10">
             <Input v-model="item.name" />
           </Col>
-          <Col span="6">
+          <Col span="5">
             <Select v-model="item.type">
               <Option
                 v-for="item in deviceDataTypeList"
@@ -48,10 +48,9 @@
               >
             </Select>
           </Col>
-          <Col span="1" offset="2">
+          <Col span="1" offset="1">
             <!-- TODO: Button 美化 -->
             <Button
-              type="error"
               @click="handleRemove(listIndex)"
               size="small"
               shape="circle"
@@ -62,54 +61,56 @@
         </Row>
       </FormItem>
       <FormItem>
-        <Row>
-          <Col span="12">
+        <Row type="flex" justify="start">
+          <Col span="24">
             <Button type="dashed" long @click="handleAdd" icon="md-add">
-              Add item
+              新增设备数据
             </Button>
           </Col>
         </Row>
       </FormItem>
       <Row :gutter="8" type="flex" justify="end">
         <Col>
-          <slot name="cancelBtn" />
+          <!-- <span @click="cancelSlotClick">
+            <slot name="cancelBtn" />
+          </span> -->
+          <Button @click="cancelBtnClick">取消</Button>
         </Col>
         <Col>
-          <span @click="comfirmSlotClick">
+          <!-- <span @click="comfirmSlotClick">
             <slot name="comfirmBtn" />
-          </span>
+          </span> -->
+          <Button type="primary" :loading="loading" @click="comfirmBtnClick">
+            确认
+          </Button>
         </Col>
       </Row>
     </Form>
   </div>
 </template>
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'deviceInfoForm',
   components: {},
   props: {
     deviceInfo: {
       type: Object
+    },
+    parentCancelBtnClick: {
+      type: Function
+    },
+    parentComfirmBtnClick: {
+      type: Function
     }
   },
   data () {
+    let valueIndex = 1
+    let formItem = JSON.parse(JSON.stringify(this.deviceInfo))
+    // formItem.values[0] = {...formItem.values[0], valueIndex}
     return {
-      valueIndex: 1,
-      formItem: {
-        name: '',
-        model: '',
-        description: '',
-        status: 1,
-        values: [
-          {
-            valueIndex: 1,
-            name: '',
-            type: '',
-            protocol: ''
-          }
-        ]
-      }
+      valueIndex,
+      formItem
     }
   },
   computed: {
@@ -119,42 +120,20 @@ export default {
     })
   },
   methods: {
-    ...mapMutations(['modifyFormItem']),
-    ...mapActions(['addDevice']),
-    comfirmSlotClick () {
-      // TODO: 为了去除values中的每个valuesIndex而出现以下令血压上升的代码(valuesIndex可能没有用), 或者可以改用delete values -> valueIndex
-      let values = this.formItem.values
-      values = values.map((item) => {
-        return {
-          name: item.name,
-          type: item.type,
-          protocol: item.protocol
-        }
-      })
-      this.addDevice({
-        name: this.formItem.name,
-        model: this.formItem.model,
-        description: this.formItem.description,
-        values
-      })
+
+    comfirmBtnClick () {
+      let newDevice = this.formItem
+      this.parentComfirmBtnClick(newDevice)
+      this.resetFormItem()
+    },
+    cancelBtnClick () {
+      this.parentCancelBtnClick()
       this.resetFormItem()
     },
     resetFormItem () {
       this.valueIndex = 1
-      this.formItem = {
-        name: '',
-        model: '',
-        description: '',
-        status: 1,
-        values: [
-          {
-            valueIndex: 1,
-            name: '',
-            type: '',
-            protocol: ''
-          }
-        ]
-      }
+      this.formItem = JSON.parse(JSON.stringify(this.deviceInfo))
+      // console.log(`reset: ${JSON.stringify(this.formItem)}`)
     },
     handleAdd () {
       this.valueIndex++
@@ -166,9 +145,23 @@ export default {
       })
     },
     handleRemove (listIndex) {
-      console.log('Delete listItem: ' + listIndex)
+      // console.log("Delete listItem: " + listIndex);
       this.formItem.values.splice(listIndex, 1)
     }
+  },
+  watch: {
+    deviceInfo (val) {
+      this.formItem = JSON.parse(JSON.stringify(this.deviceInfo))
+      // console.log(`deviceInfo: ${JSON.stringify(val)}`)
+    },
+    formItem (val) {
+      // console.log(`formItme: ${JSON.stringify(val)}`)
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      // console.log(this._uid)
+    })
   }
 }
 </script>
