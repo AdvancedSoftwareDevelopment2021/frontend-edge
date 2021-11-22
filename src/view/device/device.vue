@@ -36,6 +36,11 @@
             <Cell title="设备状态">
               <span slot="extra" v-html="handleStatusCell(device.status)" />
             </Cell>
+            <div @click="() => {console.log('HELLO')}">
+            <Cell title="查看设备详细内容">
+              <Icon slot="extra" type="ios-link" />
+            </Cell>
+            </div>
           </CellGroup>
           <Row type="flex" justify="space-around" style="padding: 10px">
             <Col span="10">

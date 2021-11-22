@@ -35,18 +35,15 @@ export default {
   },
   data () {
     return {
-      modalControl: false,
-      loading: false
+      modalControl: false
     }
   },
   computed: {},
   methods: {
     ...mapActions(['addDevice']),
     async modalComfirmBtnClick (newDevice) {
-      this.loading = true
       await new Promise((resolve) => {
         setTimeout(() => {
-          this.loading = false
           this.modalControl = false
           resolve()
         }, 1000)

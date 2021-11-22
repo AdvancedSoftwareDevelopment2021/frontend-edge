@@ -18,13 +18,19 @@
           :autosize="{ minRows: 2, maxRows: 5 }"
         ></Input>
       </FormItem>
+      <!-- TODO: validate -->
       <FormItem
         v-for="(item, listIndex) in formItem.values"
         :key="listIndex"
-        :label="'data ' + item.valueIndex"
-        :prop="'items.' + listIndex + '.value'"
+        :label="'Data ' + item.valueIndex"
+        :prop="'values.' + listIndex + '.value'"
+        :rules="{
+          required: true,
+          message: 'Data ' + item.valueIndex + ' 不能为空',
+          trigger: 'blur',
+        }"
       >
-        <Row gutter="10">
+        <Row :gutter="10">
           <Col span="10">
             <Input v-model="item.name" />
           </Col>
@@ -110,7 +116,8 @@ export default {
     // formItem.values[0] = {...formItem.values[0], valueIndex}
     return {
       valueIndex,
-      formItem
+      formItem,
+      loading: false
     }
   },
   computed: {
@@ -120,10 +127,13 @@ export default {
     })
   },
   methods: {
-
-    comfirmBtnClick () {
+    // 因为parentComfirmBtnClick当为Component addDevice所传的方法时，为异步方法，所以要在这加async用来等待异步完成
+    async comfirmBtnClick () {
       let newDevice = this.formItem
-      this.parentComfirmBtnClick(newDevice)
+      this.loading = true
+      // 这里可以把不加 await，不过加了可读性比较高
+      await this.parentComfirmBtnClick(newDevice)
+      this.loading = false
       this.resetFormItem()
     },
     cancelBtnClick () {
@@ -133,7 +143,7 @@ export default {
     resetFormItem () {
       this.valueIndex = 1
       this.formItem = JSON.parse(JSON.stringify(this.deviceInfo))
-      // console.log(`reset: ${JSON.stringify(this.formItem)}`)
+      // console.log(`reset: ${JSON.stringify(this.deviceInfo)}`)
     },
     handleAdd () {
       this.valueIndex++

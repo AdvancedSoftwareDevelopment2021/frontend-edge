@@ -13,10 +13,10 @@ export default {
         status: 1,
         values: [
           {
-            'valueIndex': 1,
-            'name': 'name',
-            'type': 'String',
-            'protocol': 'MODBUS'
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'MODBUS'
           }
         ]
       },
@@ -29,10 +29,10 @@ export default {
         status: 2,
         values: [
           {
-            'valueIndex': 1,
-            'name': 'name',
-            'type': 'String',
-            'protocol': 'MODBUS'
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'MODBUS'
           }
         ]
       },
@@ -45,10 +45,10 @@ export default {
         status: 3,
         values: [
           {
-            'valueIndex': 1,
-            'name': 'name',
-            'type': 'String',
-            'protocol': 'MODBUS'
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'MODBUS'
           }
         ]
       },
@@ -61,10 +61,10 @@ export default {
         status: 2,
         values: [
           {
-            'valueIndex': 1,
-            'name': 'name',
-            'type': 'String',
-            'protocol': 'MODBUS'
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'MODBUS'
           }
         ]
       },
@@ -77,10 +77,10 @@ export default {
         status: 3,
         values: [
           {
-            'valueIndex': 1,
-            'name': 'name',
-            'type': 'String',
-            'protocol': 'MODBUS'
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'MODBUS'
           }
         ]
       }
@@ -94,10 +94,10 @@ export default {
       status: 2,
       values: [
         {
-          'valueIndex': 1,
-          'name': 'name',
-          'type': 'String',
-          'protocol': 'WEBSOCKET'
+          valueIndex: 1,
+          name: 'name',
+          type: 'String',
+          protocol: 'WEBSOCKET、HTTP'
         }
       ]
     },
@@ -167,7 +167,9 @@ export default {
       // TODO: 发给后端存入数据库
     },
     modifyDeviceList ({ state, commit }, newState) {
-      const indexOfDevice = state.deviceList.map((device) => (device.id)).indexOf(newState.id)
+      const indexOfDevice = state.deviceList
+        .map((device) => device.id)
+        .indexOf(newState.id)
       // console.log(state.deviceList[indexOfDevice])
       state.deviceList[indexOfDevice] = newState
       console.log(`Modify device: ${JSON.stringify(newState)}`)
