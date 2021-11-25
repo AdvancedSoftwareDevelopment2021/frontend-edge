@@ -130,7 +130,7 @@ export default {
   },
   methods: {
     ...mapMutations(['deleteDevice']),
-    ...mapActions(['modifyDeviceList']),
+    ...mapActions(['modifyDeviceList', 'getDeviceList']),
     handleStatus (status) {
       let ret = ''
       switch (status) {
@@ -184,6 +184,8 @@ export default {
     }
   },
   watch: {},
-  mounted () {}
+  mounted () {
+    this.getDeviceList()
+  }
 }
 </script>

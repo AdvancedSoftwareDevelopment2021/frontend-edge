@@ -1,9 +1,10 @@
-// values -> type: Integer、String、Object、Boolean
-// values -> protocol: MODBUS、CANBUS、ZIGBEE、WEBSOCKET、HTTP
+import {
+  getDeviceListApi
+} from '@/api/device'
 
 export default {
   state: {
-    deviceList: [
+    /* deviceList: [
       {
         id: 1,
         name: 'machine1',
@@ -84,7 +85,8 @@ export default {
           }
         ]
       }
-    ],
+    ], */
+    deviceList: [],
     _formItem: {
       id: null,
       name: 'test1',
@@ -150,14 +152,26 @@ export default {
   },
   mutations: {
     deleteDevice (state, listId) {
-      // FIXME: delete by listId
+      // delete by listId
       const deleteItem = state.deviceList.splice(listId, 1)
       console.log(`Delete device ${JSON.stringify(deleteItem)}`)
+    },
+    setDeviceList (state, deviceList) {
+      state.deviceList = deviceList
     }
   },
   actions: {
+    getDeviceList ({ state, commit }) {
+      return new Promise((resolve, reject) => {
+        getDeviceListApi().then((res) => {
+          // commit('setDeviceList', res.data)
+          console.log('Get deviceList from DB')
+          resolve()
+        })
+      })
+    },
     addDevice ({ state, commit, getters }, newState) {
-      // TODO: 數據內容檢查, try catch
+      // TODO: 数据内容检查, try catch
       state.newFormItemID += 1
       const deviceId = state.newFormItemID
       console.log(`Add ${deviceId}`)
