@@ -55,7 +55,6 @@
     "not ie <= 8"
   ],
   "gitHooks": {
-    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [

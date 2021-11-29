@@ -1,27 +1,21 @@
 <template>
   <div>
-    <Button type="primary" @click="modalControl = true" icon="md-add-circle">
+    <Button type="primary" @click="addDeviceBtnClick" icon="md-add-circle">
       <!-- <Icon type="md-add-circle" /> -->
       新增设备
     </Button>
-    <Modal v-model="modalControl" title="新增设备" footer-hide>
+    <Modal v-model="modalControl" title="新增设备" footer-hide :closable="false">
       <device-info-form
         :deviceInfo="deviceInfo"
         :parentCancelBtnClick="modalCancelBtnClick"
-        :parentComfirmBtnClick="modalComfirmBtnClick"
+        :parentConfirmBtnClick="modalConfirmBtnClick"
       >
-        <!-- <template v-slot:cancelBtn>
-                    <Button @click="modalCancelBtnClick">取消</Button>
-                </template>
-                <template v-slot:comfirmBtn>
-                    <Button type="primary" :loading="loading" @click="modalComfirmBtnClick">新增</Button>
-                </template> -->
       </device-info-form>
     </Modal>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import deviceInfoForm from '_c/device-info-form'
 export default {
   name: 'addDevice',
@@ -40,20 +34,27 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapActions(['addDevice']),
-    async modalComfirmBtnClick (newDevice) {
+    ...mapMutations(['resetFormItem', 'modeChange']),
+    ...mapActions(['addDeviceAction']),
+    async modalConfirmBtnClick (newDevice) {
       await new Promise((resolve) => {
+        this.addDeviceAction(newDevice)
         setTimeout(() => {
           this.modalControl = false
+          this.resetFormItem()
           resolve()
         }, 1000)
       })
-      this.addDevice(newDevice)
-      // console.log("AddDevice comfirmBtnClick")
+      // console.log("AddDevice ConfirmBtnClick")
     },
     modalCancelBtnClick () {
       this.modalControl = false
+      this.resetFormItem()
       // console.log("AddDevice cancelBtnClick")
+    },
+    addDeviceBtnClick () {
+      this.modalControl = true
+      this.modeChange('ADD')
     }
   }
 }
