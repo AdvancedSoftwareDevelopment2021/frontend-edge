@@ -32,7 +32,7 @@
         :label="'Data ' + `${listIndex + 1}`"
         :prop="'values.' + listIndex + '.value'"
         :rules="{
-          required: true,
+          required: false,
           message: 'Data ' + `${listIndex + 1}` + ' 不能为空',
           trigger: 'blur',
         }"
@@ -72,6 +72,19 @@
             >
               <Icon type="md-close" />
             </Button>
+            <Button
+              v-if="isDetailMode"
+              @click="dataSourceDeleteBtnClick(item)"
+              size="small"
+              shape="circle"
+            >
+              <Icon type="md-close" />
+            </Button>
+          </Col>
+        </Row>
+        <Row :style="{'margin-top': '1%'}">
+          <Col span="6">
+            <Button type="primary">绑定传感器</Button>
           </Col>
         </Row>
       </FormItem>
@@ -173,15 +186,15 @@ export default {
     handleRemove (listIndex) {
       // console.log("Delete listItem: " + listIndex);
       this.formItem.values.splice(listIndex, 1)
+    },
+    dataSourceDeleteBtnClick (item) {
+      console.log(item)
     }
   },
   watch: {
     deviceInfo (val) {
-      this.formItem = JSON.parse(JSON.stringify(this.deviceInfo))
+      this.formItem = JSON.parse(JSON.stringify(val))
       // console.log(`deviceInfo: ${JSON.stringify(val)}`)
-    },
-    formItem (val) {
-      // console.log(`formItme: ${JSON.stringify(val)}`)
     }
   },
   mounted () {

@@ -337,7 +337,10 @@ export const routeHasExist = (tagNavList, routeItem) => {
   let len = tagNavList.length
   let res = false
   doCustomTimes(len, (index) => {
-    if (routeEqual(tagNavList[index], routeItem)) res = true
+    // console.log(`routeEqual[${index}]: ${JSON.stringify(tagNavList[index])}`)
+    if (routeEqual(tagNavList[index], routeItem)) {
+      res = true
+    }
   })
   return res
 }

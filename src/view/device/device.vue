@@ -4,9 +4,9 @@
       <Col span="2">
         <add-device :deviceInfo="formItem" />
       </Col>
-      <Col span="2">
+      <!-- <Col span="2">
         <add-sensor />
-      </Col>
+      </Col> -->
       <!-- TODO: 实现search 功能 -->
       <Col span="10">
         <Input
@@ -43,7 +43,7 @@
               <Cell title="查看设备详细内容">
                 <Icon slot="extra" type="ios-link" />
               </Cell>
-              <Modal
+              <!-- <Modal
                 v-model="detailModalControl"
                 title="设备详细内容"
                 footer-hide
@@ -55,7 +55,7 @@
                   :parentConfirmBtnClick="detailConfirmBtnClick"
                 >
                 </device-info-form>
-              </Modal>
+              </Modal> -->
             </div>
           </CellGroup>
           <Row type="flex" justify="space-around" style="padding: 10px">
@@ -105,7 +105,7 @@ export default {
     return {
       searchInput: '',
       modalControl: false,
-      detailModalControl: false,
+      // detailModalControl: false,
       activeDevice: {
         id: null,
         name: '',
@@ -190,18 +190,24 @@ export default {
       this.deleteDeviceAction(listId)
     },
     deviceDetailClick (deviceId) {
-      this.detailModalControl = true
+      // this.detailModalControl = true
       this.activeDevice = this.deviceList.find(
         (device) => device.id === deviceId
       )
+      this.$router.push({
+        name: 'deviceDetail',
+        params: {
+          device: this.activeDevice
+        }
+      })
       this.modeChange('DETAIL')
-    },
-    detailConfirmBtnClick () {
-      this.detailModalControl = false
-    },
-    detailCancelBtnClick () {
-      this.detailModalControl = false
     }
+    // detailConfirmBtnClick () {
+    //   this.detailModalControl = false
+    // },
+    // detailCancelBtnClick () {
+    //   this.detailModalControl = false
+    // }
   },
   watch: {},
   async created () {

@@ -41,6 +41,7 @@ export default {
   mutations: {
     setBreadCrumb (state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
+      console.log(`state.homeRoute: ${JSON.stringify(state.homeRoute)}`)
     },
     setHomeRoute (state, routes) {
       state.homeRoute = getHomeRoute(routes, homeName)

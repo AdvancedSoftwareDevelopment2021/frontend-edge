@@ -162,13 +162,13 @@
                       </ListItem>
                     </List> -->
                     <Table :columns="tableCols" :data="device.values">
-                      <template slot-scope="{ row, index }" slot="name">
+                      <template slot-scope="{ row }" slot="name">
                         <span>{{ row.name }}</span>
                       </template>
-                      <template slot-scope="{ row, index }" slot="type">
+                      <template slot-scope="{ row }" slot="type">
                         <span>{{ row.type }}</span>
                       </template>
-                      <template slot-scope="{ row, index }" slot="protocol">
+                      <template slot-scope="{ row }" slot="protocol">
                         <span>{{ row.protocol }}</span>
                       </template>
                       <template slot-scope="{ row, index }" slot="action">
@@ -245,16 +245,6 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
-import { mapActions, mapGetters, mapState } from "vuex";
-export default {
-  name: "addSensor",
-  data() {
-    return {
-      modalControl: false,
-      loading: false,
-      activeTab: "Modbus",
-=======
 import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
   name: 'addSensor',
@@ -263,7 +253,6 @@ export default {
       modalControl: false,
       loading: false,
       activeTab: 'Modbus',
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
       newSensorFormItem: {
         /* collectScheduler: {
           interval: null,
@@ -277,39 +266,12 @@ export default {
           modbusFunction: "HOLDING_REGISTER",
           datatype: "BINARY",
           num: 2,
-<<<<<<< HEAD
-        }, 
-=======
         },
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
         */
       },
       activeDeviceName: null,
       selectSensor: {
         sensorName: null,
-<<<<<<< HEAD
-        sensorIndex: null,
-      },
-      tableCols: [
-        {
-          title: "传感器名称",
-          slot: "name",
-        },
-        {
-          title: "传感器数据类型",
-          slot: "type",
-        },
-        {
-          title: "传感器所用协议",
-          slot: "protocol",
-        },
-        {
-          title: "选择",
-          slot: "action",
-        },
-      ],
-    };
-=======
         sensorIndex: null
       },
       tableCols: [
@@ -331,42 +293,18 @@ export default {
         }
       ]
     }
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
   },
   computed: {
     ...mapState({
       sensorFormItem: (state) => state.sensor.sensorFormItem,
-<<<<<<< HEAD
-      unitList: (state) => state.sensor.unitList,
-    }),
-    ...mapGetters(["deviceDataWithoutSensor"]),
-=======
       unitList: (state) => state.sensor.unitList
     }),
     ...mapGetters(['deviceDataWithoutSensor'])
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
     // deviceDataWithoutSensor() {
     //     return this.$store.getters.deviceDataWithoutSensor
     // }
   },
   methods: {
-<<<<<<< HEAD
-    ...mapActions(["addSensorAction", "getDeviceListAction"]),
-    addSensorBtnClick() {
-      this.modalControl = true;
-    },
-    cancelBtnClick() {
-      this.modalControl = false;
-      this.resetSensorFormItem();
-    },
-    async confirmBtnClick() {
-      this.loading = true;
-      const device = this.deviceDataWithoutSensor.find((device) => {
-        return (
-          device.deviceName.valueOf() === this.activeDeviceName[0].valueOf()
-        );
-      });
-=======
     ...mapActions(['addSensorAction', 'getDeviceListAction']),
     addSensorBtnClick () {
       this.modalControl = true
@@ -382,42 +320,11 @@ export default {
           device.deviceName.valueOf() === this.activeDeviceName[0].valueOf()
         )
       })
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
       // console.log(this.deviceDataWithoutSensor[0].deviceName.valueOf() === this.activeDeviceName[0].valueOf())
       let newSensor = {
         name: this.selectSensor.sensorName,
         collectScheduler:
           this.newSensorFormItem[this.activeTab].collectScheduler,
-<<<<<<< HEAD
-        dataCollector: this.newSensorFormItem[this.activeTab].dataCollector,
-      };
-      await new Promise((resolve) => {
-        this.addSensorAction({deviceId: device.deviceId, newSensor})
-        setTimeout(() => {
-          this.modalControl = false;
-          this.resetSensorFormItem();
-          resolve();
-        }, 1000);
-      });
-      // FIXME:
-      await this.getDeviceListAction()
-      this.loading = false;
-    },
-    sensorSelectBtnClick(row, index) {
-      this.selectSensor.sensorName = row.name;
-      this.selectSensor.sensorIndex = index;
-    },
-    sensorSelectCancelBtnClick() {
-      this.selectSensor.sensorName = null;
-      this.selectSensor.sensorIndex = null;
-    },
-    resetSensorFormItem() {
-      this.newSensorFormItem = JSON.parse(JSON.stringify(this.sensorFormItem));
-      this.activeDeviceName = null;
-      this.selectSensor.sensorName = null;
-      this.selectSensor.sensorIndex = null;
-    },
-=======
         dataCollector: this.newSensorFormItem[this.activeTab].dataCollector
       }
       await new Promise((resolve) => {
@@ -446,7 +353,6 @@ export default {
       this.selectSensor.sensorName = null
       this.selectSensor.sensorIndex = null
     }
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
   },
   watch: {
     //   activeTab(val) {
@@ -457,16 +363,6 @@ export default {
     //     console.log("Watching deviceDataWithoutSensor")
     //     console.log(val)
     // }
-<<<<<<< HEAD
-    activeDeviceName(newVal, oldVal) {
-      console.log(`Focus change: ${oldVal} --> ${newVal}`);
-    },
-  },
-  created() {
-    this.newSensorFormItem = JSON.parse(JSON.stringify(this.sensorFormItem));
-  },
-};
-=======
     activeDeviceName (newVal, oldVal) {
       console.log(`Focus change: ${oldVal} --> ${newVal}`)
     }
@@ -475,5 +371,4 @@ export default {
     this.newSensorFormItem = JSON.parse(JSON.stringify(this.sensorFormItem))
   }
 }
->>>>>>> 3db1923c0aca6285528749a221e048ff89db10a8
 </script>
