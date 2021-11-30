@@ -1,56 +1,61 @@
 <template>
-    <div>
-        <Button type="primary" @click="modalControl = true">
-            <Icon type="ios-add-circle-outline" />
-            新增设备
-        </Button>
-        <Modal
-            v-model="modalControl"
-            title="新增设备"
-            :loading="loading"
-            @on-ok="modalComfirmBtnClick"
-            @on-cancel="modalCancelBtnClick">
-            <device-info-form :deviceInfo="deviceInfo"/>
-        </Modal>
-    </div>
+  <div>
+    <Button type="primary" @click="addDeviceBtnClick" icon="md-add-circle">
+      <!-- <Icon type="md-add-circle" /> -->
+      新增设备
+    </Button>
+    <Modal v-model="modalControl" title="新增设备" footer-hide :closable="false">
+      <device-info-form
+        :deviceInfo="deviceInfo"
+        :parentCancelBtnClick="modalCancelBtnClick"
+        :parentConfirmBtnClick="modalConfirmBtnClick"
+      >
+      </device-info-form>
+    </Modal>
+  </div>
 </template>
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
-import deviceInfoForm from '_c/device-info-form';
+import { mapActions, mapMutations } from 'vuex'
+import deviceInfoForm from '_c/device-info-form'
 export default {
-    name: 'addDevice',
-    components: {
-        deviceInfoForm
-    },
-    props: {
-        deviceInfo: {
-            type: Object
-        }
-    },
-    data () {
-        return {
-            modalControl: false,
-            loading: true,
-        }
-    },
-    computed: {
-    },
-    methods: {
-        ...mapMutations([
-            'initFormItem'
-        ]),
-        ...mapActions([
-            'addDevice'
-        ]),
-        modalComfirmBtnClick () {
-            setTimeout(() => {
-                this.addDevice()
-                this.modalControl = false;
-            }, 1000);
-        },
-        modalCancelBtnClick() {
-            this.initFormItem()
-        }
+  name: 'addDevice',
+  components: {
+    deviceInfoForm
+  },
+  props: {
+    deviceInfo: {
+      type: Object
     }
+  },
+  data () {
+    return {
+      modalControl: false
+    }
+  },
+  computed: {},
+  methods: {
+    ...mapMutations(['resetFormItem', 'modeChange']),
+    ...mapActions(['addDeviceAction']),
+    async modalConfirmBtnClick (newDevice) {
+      await new Promise((resolve) => {
+        this.addDeviceAction(newDevice)
+        setTimeout(() => {
+          this.modalControl = false
+          this.resetFormItem()
+          resolve()
+        }, 1000)
+      })
+      // console.log("AddDevice ConfirmBtnClick")
+    },
+    modalCancelBtnClick () {
+      this.modalControl = false
+      this.resetFormItem()
+      // console.log("AddDevice cancelBtnClick")
+    },
+    addDeviceBtnClick () {
+      this.modalControl = true
+      this.modeChange('ADD')
+    }
+  }
 }
 </script>

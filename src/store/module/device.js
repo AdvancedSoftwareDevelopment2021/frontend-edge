@@ -1,109 +1,248 @@
+import {
+  getDeviceListApi,
+  deleteDeviceApi,
+  addDeviceApi,
+  modifyDeviceApi
+} from '@/api/device'
+import Mock from 'mockjs'
+
 export default {
   state: {
-    deviceList: [
+    /* deviceList: [
       {
         id: 1,
-        name: "machine1",
-        model: "RTX1",
-        category: "加热器",
-        info: "",
-        status: 1
+        name: 'machine1',
+        model: 'RTX1',
+        // category: '加热器',
+        description: '',
+        status: 1,
+        values: [
+          {
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'Modbus'
+          }
+        ]
       },
       {
         id: 2,
-        name: "machine2",
-        model: "RTX2",
-        category: "加热器",
-        info: "",
-        status: 1
+        name: 'machine2',
+        model: 'RTX2',
+        // category: '加热器',
+        description: '',
+        status: 2,
+        values: [
+          {
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'Modbus'
+          }
+        ]
       },
       {
         id: 3,
-        name: "machine3",
-        model: "RTX3",
-        category: "加热器",
-        info: "",
-        status: 2
+        name: 'machine3',
+        model: 'RTX3',
+        // category: '加热器',
+        description: '',
+        status: 3,
+        values: [
+          {
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'Modbus'
+          }
+        ]
       },
       {
         id: 4,
-        name: "machine4",
-        model: "RTX4",
-        category: "加热器",
-        info: "",
-        status: 2
+        name: 'machine4',
+        model: 'RTX4',
+        // category: '加热器',
+        description: '',
+        status: 2,
+        values: [
+          {
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'Modbus'
+          }
+        ]
       },
       {
         id: 5,
-        name: "machine5",
-        model: "RTX5",
-        category: "加热器",
-        info: "",
-        status: 1
+        name: 'machine5',
+        model: 'RTX5',
+        // category: '加热器',
+        description: '',
+        status: 3,
+        values: [
+          {
+            valueIndex: 1,
+            name: 'name',
+            type: 'String',
+            protocol: 'Modbus'
+          }
+        ]
+      }
+    ], */
+    deviceList: [],
+    _formItem: Mock.mock({
+      id: 0,
+      'name|1': /[a-zA-Z0-9]{5,8}/,
+      // category: 'test2',
+      'model|1': /[A-Z]{5,8}[0-9]{2,3}/,
+      'description|2': /[a-zA-Z0-9]{5,8} /,
+      'status|1': 2,
+      'values|1-4': [
+        {
+          'valueIndex|+1': 1,
+          'name|1': /[a-zA-Z0-9]{5,8}/,
+          'type|1': ['Integer', 'String', 'Object', 'Boolean'],
+          'protocol|1': ['Modbus', 'Canbus', 'ZigBee', 'WebSocket', 'Http']
+        }
+      ]
+    }),
+    deviceDataTypeList: [
+      {
+        value: 'Integer',
+        label: 'Integer'
+      },
+      {
+        value: 'String',
+        label: 'String'
+      },
+      {
+        value: 'Object',
+        label: 'Object'
+      },
+      {
+        value: 'Boolean',
+        label: 'Boolean'
       }
     ],
-    _formItem: {
-      id: null,
-      name: "test1",
-      category: "test2",
-      model: "test3",
-      info: "test4",
-      status: 1
-    },
-    _newFormItemID: 6
+    deviceDataProtocolList: [
+      {
+        value: 'Modbus',
+        label: 'Modbus'
+      },
+      {
+        value: 'Canbus',
+        label: 'Canbus'
+      },
+      {
+        value: 'ZigBee',
+        label: 'ZigBee'
+      },
+      {
+        value: 'WebSocket',
+        label: 'WebSocket'
+      },
+      {
+        value: 'Http',
+        label: 'Http'
+      }
+    ],
+    mode: 'ADD'
   },
   getters: {
-    newFormItemID(state) {
-      //TODO: 改做闭包？
-      return state._newFormItemID
+    formItem (state) {
+      return { ...state._formItem }
     },
-    formItem(state, getters) {
-      return {...state._formItem, id: getters.newFormItemID}
+    deviceDataWithoutSensor (state) {
+      if (state.deviceList.length === 0) return []
+      let sensorList = state.deviceList.map((device) => {
+        const { name, id, values } = device
+        let list = []
+        for (let value of values) {
+          if (value.sensorId === null) list.push(value)
+        }
+        return {
+          deviceName: name,
+          deviceId: id,
+          values: list
+        }
+      })
+      return sensorList
     }
   },
   mutations: {
-    initFormItem(state) {
-      // console.log('Initial FormItem')
-      state._formItem = {
-        id: null,
-        name: "test1",
-        category: "test2",
-        model: "test3",
-        info: "test4",
-        status: 1
-      }
+    resetFormItem (state) {
+      state._formItem = Mock.mock({
+        id: 0,
+        'name|1': /[a-zA-Z0-9]{5,8}/,
+        // category: 'test2',
+        'model|1': /[A-Z]{5,8}[0-9]{2,3}/,
+        'description|2': /[a-zA-Z0-9]{5,8} /,
+        'status|1': 2,
+        'values|1-4': [
+          {
+            'valueIndex|+1': 1,
+            'name|1': /[a-zA-Z0-9]{5,8}/,
+            'type|1': ['Integer', 'String', 'Object', 'Boolean'],
+            'protocol|1': ['Modbus', 'Canbus', 'ZigBee', 'WebSocket', 'Http']
+          }
+        ]
+      })
     },
-    modifyFormItem(state, newState) {
-      // const formItem = getters.formItem
-      state._formItem = { ...state._formItem, ...newState };
+    setDeviceList (state, deviceList) {
+      state.deviceList = deviceList
     },
-    deleteDevice(state, { id }) {
-      //TODO: delete by id
-      const deleteItem = state.deviceList.splice(id, 1)
-      console.log(`Delete ${deleteItem.id}`)
+    addDevice (state, newDevice) {
+      state.deviceList.push(newDevice)
+    },
+    deleteDevice (state, { listId, deviceId }) {
+      // TODO: assert(listId === indexOfDevice)
+      // const deleteDevice = state.deviceList.splice(listId, 1)
+      const indexOfDevice = state.deviceList
+        .map((device) => device.id)
+        .indexOf(deviceId)
+      const deleteDevice = state.deviceList.splice(indexOfDevice, 1)
+    },
+    modifyDevice (state, updateDeviceInfo) {
+      const indexOfDevice = state.deviceList
+        .map((device) => device.id)
+        .indexOf(updateDeviceInfo.id)
+      state.deviceList[indexOfDevice] = updateDeviceInfo
+    },
+    modeChange (state, newMode) {
+      state.mode = newMode
+      console.log(newMode)
     }
   },
   actions: {
-    addDevice({ state, commit, getters }) {
-      // TODO: 數據內容檢查, try catch
-      const formItem = getters.formItem
-      console.log(`Add ${formItem.id}`)
-      state._newFormItemID += 1
-      state.deviceList.push(formItem);
-      commit('initFormItem')
-      // TODO: 发给后端存入数据库
+    async getDeviceListAction ({ state, commit }) {
+      await getDeviceListApi().then((res) => {
+        commit('setDeviceList', res.data.object)
+        // console.log(JSON.stringify(state.deviceList))
+      })
+      console.log('Get deviceList from DB')
     },
-    modifyDeviceList({ state, commit }) {
-      // 因为device.id作为的key，为了不改变key，故有以下令人血压上升的代码
-      const { name, category, model, info } = state._formItem
-      state.deviceList[state._formItem.id-1] = {
-        ...state.deviceList[state._formItem.id-1],
-        name,
-        category,
-        model,
-        info
-      }
-      commit('initFormItem')
-  },
+    async addDeviceAction ({ state, commit, getters, dispatch }, newDeviceInfo) {
+      // TODO: 数据内容检查, try catch
+      let newDevice = newDeviceInfo
+      await addDeviceApi(newDeviceInfo).then((res) => {
+        console.log(res.data.object.id)
+        newDevice = { ...newDevice, id: res.data.object.id }
+        commit('addDevice', newDevice)
+      })
+      console.log(`Add device ${JSON.stringify(newDevice)}`)
+    },
+    async deleteDeviceAction ({ state, commit, dispatch }, listId) {
+      // delete by listId
+      const deviceId = state.deviceList[listId].id
+      await deleteDeviceApi(deviceId)
+      commit('deleteDevice', { listId, deviceId })
+      console.log(`Delete device ${JSON.stringify(state.deviceList[listId])}`)
+    },
+    async modifyDeviceListAction ({ state, commit, dispatch }, updateDeviceInfo) {
+      await modifyDeviceApi(updateDeviceInfo)
+      commit('modifyDevice', updateDeviceInfo)
+      console.log(`Modify device: ${JSON.stringify(updateDeviceInfo)}`)
+    }
   }
-};
+}
