@@ -1,6 +1,7 @@
 import axios from '@/libs/api.request'
 
-export const addSensor = ({ deviceId, newSensor }) => {
+export const addSensorApi = ({ deviceId, newSensor }) => {
+  console.log(deviceId, newSensor)
   return axios.request({
     url: `sensor/${deviceId}`,
     method: 'post',
