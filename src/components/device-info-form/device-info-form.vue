@@ -63,7 +63,6 @@
             </Select>
           </Col>
           <Col span="1">
-            <!-- TODO: Button 美化 -->
             <Button
               v-if="!isDetailMode"
               @click="handleRemove(listIndex)"
@@ -72,19 +71,19 @@
             >
               <Icon type="md-close" />
             </Button>
-            <Button
-              v-if="isDetailMode"
-              @click="dataSourceDeleteBtnClick(item)"
-              size="small"
-              shape="circle"
-            >
-              <Icon type="md-close" />
-            </Button>
           </Col>
         </Row>
-        <Row v-if="isDetailMode && !item.sensorId" :style="{ 'margin-top': '1%' }">
-          <Col span="3">
-            <Button type="primary" @click="dataSourceBindingBtnClick(item)">
+        <Row
+          v-if="isDetailMode && !item.sensorId"
+          :style="{ 'margin-top': '1%' }"
+          :gutter="10"
+        >
+          <Col span="4">
+            <Button
+              long
+              type="primary"
+              @click="dataSourceBindingBtnClick(item)"
+            >
               绑定传感器
             </Button>
             <Modal
@@ -125,14 +124,25 @@
             </Modal>
           </Col>
           <!-- TODO: 选择后应该有回馈 -->
-          <Col span="6">
+          <!-- <Col span="6">
             <Input disabled placeholder="请选择传感器" />
-          </Col>
+          </Col> -->
         </Row>
-        <Row v-else :style="{ 'margin-top': '1%' }">
-          <div>
-            获取传感器实时数据
-          </div>
+        <Row
+          :gutter="10"
+          v-else-if="isDetailMode && item.sensorId"
+          :style="{ 'margin-top': '1%' }"
+        >
+          <Col span="3">
+            <Button long type="info" @click="startCommandBtnClick(item)"
+              >开始运行</Button
+            >
+          </Col>
+          <Col span="3">
+            <Button long type="info" @click="stopCommandBtnClick(item)"
+              >停止</Button
+            >
+          </Col>
         </Row>
       </FormItem>
       <FormItem v-if="!isDetailMode">
@@ -165,7 +175,7 @@
 </template>
 <script>
 // TODO: remove property valueIndex
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import {
   modbusBindingForm,
   zigbeeBindingForm,
@@ -200,9 +210,7 @@ export default {
       formItem,
       loading: false,
       bindingModalControl: false,
-      activeDataSource: {
-
-      },
+      activeDataSource: {},
       bindingList: []
     }
   },
@@ -220,11 +228,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['sensorStartCommandAction', 'sensorStopCommandAction']),
     // 因为当parentConfirmBtnClick为Component addDevice所传的方法时，是异步方法，所以要在这加async用来等待异步完成
     async confirmBtnClick () {
       let newDevice = this.formItem
       this.loading = true
-      if (this.isDetailMode) { await this.parentConfirmBtnClick(this.bindingList) } else { await this.parentConfirmBtnClick(newDevice) }
+      if (this.isDetailMode) {
+        await this.parentConfirmBtnClick(this.bindingList)
+      } else {
+        await this.parentConfirmBtnClick(newDevice)
+      }
       this.loading = false
       this.resetFormItem()
     },
@@ -250,13 +263,9 @@ export default {
       // console.log("Delete listItem: " + listIndex);
       this.formItem.values.splice(listIndex, 1)
     },
-    dataSourceDeleteBtnClick (item) {
-      console.log(item)
-    },
     dataSourceBindingBtnClick (item) {
       this.bindingModalControl = true
       this.activeDataSource = item
-      console.log(item)
       console.log(this.activeDataSource)
     },
     dataSourceBindingCancelBtnClick () {
@@ -267,6 +276,18 @@ export default {
       this.bindingModalControl = false
       this.bindingList.push({ deviceId: id, sensor })
       console.log(`Add sensor: ${JSON.stringify({ deviceId: id, sensor })}`)
+    },
+    async startCommandBtnClick (item) {
+      const deviceId = this.deviceInfo.id
+      const sensorId = item.sensorId
+      const sensorName = item.name
+      await this.sensorStartCommandAction({ deviceId, sensorId, sensorName })
+    },
+    async stopCommandBtnClick (item) {
+      const deviceId = this.deviceInfo.id
+      const sensorId = item.sensorId
+      const sensorName = item.name
+      await this.sensorStopCommandAction({ deviceId, sensorId, sensorName })
     }
   },
   watch: {

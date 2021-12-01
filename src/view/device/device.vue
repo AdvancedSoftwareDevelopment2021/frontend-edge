@@ -27,15 +27,15 @@
           shadow
           style="width: 300px"
         >
-          <Badge :status="handleStatus(device.status)" slot="extra">
+          <!-- <Badge :status="handleStatus(device.status)" slot="extra">
             <a href="#" class="demo-badge"></a>
-          </Badge>
+          </Badge> -->
           <CellGroup>
             <!-- <Cell :title="'类型: ' + device.category" /> -->
             <Cell :title="'型号: ' + device.model" />
-<!--            <Cell title="设备状态">-->
-<!--              <span slot="extra" v-html="handleStatusCell(device.status)" />-->
-<!--            </Cell>-->
+            <!--            <Cell title="设备状态">-->
+            <!--              <span slot="extra" v-html="handleStatusCell(device.status)" />-->
+            <!--            </Cell>-->
             <div @click="deviceDetailClick(device.id)">
               <Cell title="查看设备详细内容">
                 <Icon slot="extra" type="ios-link" />
@@ -53,6 +53,11 @@
                 >
                 </device-info-form>
               </Modal> -->
+            </div>
+            <div @click="deviceHistoryDataClick(device.id)">
+              <Cell title="查看设备历史数据">
+                <Icon slot="extra" type="ios-link" />
+              </Cell>
             </div>
           </CellGroup>
           <Row type="flex" justify="space-around" style="padding: 10px">
@@ -198,6 +203,16 @@ export default {
         }
       })
       this.modeChange('DETAIL')
+    },
+    // TODO: 其实可以不传device.id，直接传device就不用find
+    deviceHistoryDataClick (deviceId) {
+      this.activeDevice = this.deviceList.find((device) => device.id === deviceId)
+      this.$router.push({
+        name: '设备历史数据',
+        params: {
+          device: this.activeDevice
+        }
+      })
     }
     // detailConfirmBtnClick () {
     //   this.detailModalControl = false

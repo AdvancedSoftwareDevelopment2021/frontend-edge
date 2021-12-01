@@ -39,6 +39,7 @@ export default {
       // bindingList.forEach(({ deviceId, sensor }) => {
       //   this.addSensorAction({ deviceId, sensor })
       // });
+      // TODO: 现在每次submit后会返面设备管理页面，然后设备管理页面会重新从数据库中请求数据
       this.$router.go(-1)
     }
   },

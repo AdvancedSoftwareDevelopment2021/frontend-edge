@@ -91,19 +91,35 @@ export default {
       }
     ], */
     deviceList: [],
+    // _formItem: Mock.mock({
+    //   id: 0,
+    //   'name|1': /[a-zA-Z0-9]{5,8}/,
+    //   // category: 'test2',
+    //   'model|1': /[A-Z]{5,8}[0-9]{2,3}/,
+    //   'description|2': /[a-zA-Z0-9]{5,8} /,
+    //   'status|1': 2,
+    //   'values|1-4': [
+    //     {
+    //       'valueIndex|+1': 1,
+    //       'name|1': /[a-zA-Z0-9]{5,8}/,
+    //       'type|1': ['Integer', 'String', 'Object', 'Boolean'],
+    //       'protocol|1': ['Modbus', 'Canbus', 'ZigBee', 'WebSocket', 'Http']
+    //     }
+    //   ]
+    // }),
     _formItem: Mock.mock({
       id: 0,
-      'name|1': /[a-zA-Z0-9]{5,8}/,
+      name: null,
       // category: 'test2',
-      'model|1': /[A-Z]{5,8}[0-9]{2,3}/,
-      'description|2': /[a-zA-Z0-9]{5,8} /,
-      'status|1': 2,
-      'values|1-4': [
+      model: null,
+      description: null,
+      status: 2,
+      values: [
         {
-          'valueIndex|+1': 1,
-          'name|1': /[a-zA-Z0-9]{5,8}/,
-          'type|1': ['Integer', 'String', 'Object', 'Boolean'],
-          'protocol|1': ['Modbus', 'Canbus', 'ZigBee', 'WebSocket', 'Http']
+          valueIndex: 1,
+          name: null,
+          type: null,
+          protocol: null
         }
       ]
     }),
@@ -130,10 +146,10 @@ export default {
         value: 'Modbus',
         label: 'Modbus'
       },
-      {
-        value: 'Canbus',
-        label: 'Canbus'
-      },
+      // {
+      //   value: 'Canbus',
+      //   label: 'Canbus'
+      // },
       {
         value: 'ZigBee',
         label: 'ZigBee'
@@ -201,7 +217,7 @@ export default {
       const indexOfDevice = state.deviceList
         .map((device) => device.id)
         .indexOf(deviceId)
-      const deleteDevice = state.deviceList.splice(indexOfDevice, 1)
+      state.deviceList.splice(indexOfDevice, 1)
     },
     modifyDevice (state, updateDeviceInfo) {
       const indexOfDevice = state.deviceList
@@ -233,13 +249,16 @@ export default {
       console.log(`Add device ${JSON.stringify(newDevice)}`)
     },
     async deleteDeviceAction ({ state, commit, dispatch }, listId) {
-      // delete by listId
+      // TODO: delete data sources
       const deviceId = state.deviceList[listId].id
       await deleteDeviceApi(deviceId)
       commit('deleteDevice', { listId, deviceId })
       console.log(`Delete device ${JSON.stringify(state.deviceList[listId])}`)
     },
-    async modifyDeviceListAction ({ state, commit, dispatch }, updateDeviceInfo) {
+    async modifyDeviceListAction (
+      { state, commit, dispatch },
+      updateDeviceInfo
+    ) {
       await modifyDeviceApi(updateDeviceInfo)
       commit('modifyDevice', updateDeviceInfo)
       console.log(`Modify device: ${JSON.stringify(updateDeviceInfo)}`)
