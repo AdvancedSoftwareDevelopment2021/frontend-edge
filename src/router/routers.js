@@ -76,30 +76,29 @@ export default [
   },
   {
     path: '/device',
-    name: '_device',
+    name: '设备管理',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      title: '设备管理',
+      icon: 'logo-buffer'
     },
     children: [
       {
-        path: '/device',
-        name: 'device',
+        path: '',
+        name: '设备管理',
         meta: {
           hideInMenu: true,
-          title: '设备',
-          notCache: true
+          title: '设备管理',
+          icon: 'logo-buffer'
         },
         component: () => import('@/view/device/device.vue')
       },
       {
-        path: '/deviceDetail',
-        name: 'deviceDetail',
+        path: 'deviceDetail',
+        name: '设备详情',
         meta: {
           hideInMenu: true,
           title: '设备详情',
-          notCache: true
         },
         component: () => import('@/view/device/device-detail.vue'),
         props: true

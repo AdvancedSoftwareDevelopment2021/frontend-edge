@@ -4,9 +4,6 @@
       <Col span="2">
         <add-device :deviceInfo="formItem" />
       </Col>
-      <!-- <Col span="2">
-        <add-sensor />
-      </Col> -->
       <!-- TODO: 实现search 功能 -->
       <Col span="10">
         <Input
@@ -36,9 +33,9 @@
           <CellGroup>
             <!-- <Cell :title="'类型: ' + device.category" /> -->
             <Cell :title="'型号: ' + device.model" />
-            <Cell title="设备状态">
-              <span slot="extra" v-html="handleStatusCell(device.status)" />
-            </Cell>
+<!--            <Cell title="设备状态">-->
+<!--              <span slot="extra" v-html="handleStatusCell(device.status)" />-->
+<!--            </Cell>-->
             <div @click="deviceDetailClick(device.id)">
               <Cell title="查看设备详细内容">
                 <Icon slot="extra" type="ios-link" />
@@ -195,7 +192,7 @@ export default {
         (device) => device.id === deviceId
       )
       this.$router.push({
-        name: 'deviceDetail',
+        name: '设备详情',
         params: {
           device: this.activeDevice
         }
