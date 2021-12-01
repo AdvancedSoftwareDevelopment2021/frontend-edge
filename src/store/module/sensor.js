@@ -79,7 +79,7 @@ export default {
   },
   actions: {
     async addSensorAction (
-      { state, commit, dispatch, rootState },
+      { state },
       { deviceId, newSensor }
     ) {
       await addSensorApi({ deviceId, newSensor })
