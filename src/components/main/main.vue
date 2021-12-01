@@ -7,6 +7,9 @@
           <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
           <img v-show="collapsed" :src="minLogo" key="min-logo" />
         </div>
+        <!-- <div>
+          {{this.$route.name}}
+        </div> -->
       </side-menu>
     </Sider>
     <Layout>
@@ -159,6 +162,7 @@ export default {
       this.setBreadCrumb(newRoute)
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
       this.$refs.sideMenu.updateOpenName(newRoute.name)
+      console.log(`Route change: ${newRoute.name}`)
     }
   },
   mounted () {

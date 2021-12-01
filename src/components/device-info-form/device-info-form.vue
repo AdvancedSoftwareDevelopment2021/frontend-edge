@@ -32,7 +32,7 @@
         :label="'Data ' + `${listIndex + 1}`"
         :prop="'values.' + listIndex + '.value'"
         :rules="{
-          required: true,
+          required: false,
           message: 'Data ' + `${listIndex + 1}` + ' 不能为空',
           trigger: 'blur',
         }"
@@ -72,7 +72,67 @@
             >
               <Icon type="md-close" />
             </Button>
+            <Button
+              v-if="isDetailMode"
+              @click="dataSourceDeleteBtnClick(item)"
+              size="small"
+              shape="circle"
+            >
+              <Icon type="md-close" />
+            </Button>
           </Col>
+        </Row>
+        <Row v-if="isDetailMode && !item.sensorId" :style="{ 'margin-top': '1%' }">
+          <Col span="3">
+            <Button type="primary" @click="dataSourceBindingBtnClick(item)">
+              绑定传感器
+            </Button>
+            <Modal
+              v-model="bindingModalControl"
+              title="绑定传感器"
+              footer-hide
+              :closable="false"
+              width="50%"
+            >
+              <modbus-binding-form
+                v-if="activeDataSource.protocol === 'Modbus'"
+                protocolName="Modbus"
+                :dataSourceName="activeDataSource.name"
+                :parentCancelBtnClick="dataSourceBindingCancelBtnClick"
+                :parentConfirmBtnClick="dataSourceBindingConfirmBtnClick"
+              />
+              <zigbee-binding-form
+                v-else-if="activeDataSource.protocol === 'ZigBee'"
+                protocolName="ZigBee"
+                :dataSourceName="activeDataSource.name"
+                :parentCancelBtnClick="dataSourceBindingCancelBtnClick"
+                :parentConfirmBtnClick="dataSourceBindingConfirmBtnClick"
+              />
+              <websocket-binding-form
+                v-else-if="activeDataSource.protocol === 'WebSocket'"
+                protocolName="WebSocket"
+                :dataSourceName="activeDataSource.name"
+                :parentCancelBtnClick="dataSourceBindingCancelBtnClick"
+                :parentConfirmBtnClick="dataSourceBindingConfirmBtnClick"
+              />
+              <http-binding-form
+                v-else-if="activeDataSource.protocol === 'Http'"
+                protocolName="Http"
+                :dataSourceName="activeDataSource.name"
+                :parentCancelBtnClick="dataSourceBindingCancelBtnClick"
+                :parentConfirmBtnClick="dataSourceBindingConfirmBtnClick"
+              />
+            </Modal>
+          </Col>
+          <!-- TODO: 选择后应该有回馈 -->
+          <Col span="6">
+            <Input disabled placeholder="请选择传感器" />
+          </Col>
+        </Row>
+        <Row v-else :style="{ 'margin-top': '1%' }">
+          <div>
+            获取传感器实时数据
+          </div>
         </Row>
       </FormItem>
       <FormItem v-if="!isDetailMode">
@@ -106,9 +166,20 @@
 <script>
 // TODO: remove property valueIndex
 import { mapState } from 'vuex'
+import {
+  modbusBindingForm,
+  zigbeeBindingForm,
+  websocketBindingForm,
+  httpBindingForm
+} from '_c/protocol-binding-form'
 export default {
   name: 'deviceInfoForm',
-  components: {},
+  components: {
+    modbusBindingForm,
+    zigbeeBindingForm,
+    websocketBindingForm,
+    httpBindingForm
+  },
   props: {
     deviceInfo: {
       type: Object
@@ -127,7 +198,12 @@ export default {
     return {
       valueIndex,
       formItem,
-      loading: false
+      loading: false,
+      bindingModalControl: false,
+      activeDataSource: {
+
+      },
+      bindingList: []
     }
   },
   computed: {
@@ -148,7 +224,7 @@ export default {
     async confirmBtnClick () {
       let newDevice = this.formItem
       this.loading = true
-      await this.parentConfirmBtnClick(newDevice)
+      if (this.isDetailMode) { await this.parentConfirmBtnClick(this.bindingList) } else { await this.parentConfirmBtnClick(newDevice) }
       this.loading = false
       this.resetFormItem()
     },
@@ -173,15 +249,30 @@ export default {
     handleRemove (listIndex) {
       // console.log("Delete listItem: " + listIndex);
       this.formItem.values.splice(listIndex, 1)
+    },
+    dataSourceDeleteBtnClick (item) {
+      console.log(item)
+    },
+    dataSourceBindingBtnClick (item) {
+      this.bindingModalControl = true
+      this.activeDataSource = item
+      console.log(item)
+      console.log(this.activeDataSource)
+    },
+    dataSourceBindingCancelBtnClick () {
+      this.bindingModalControl = false
+    },
+    dataSourceBindingConfirmBtnClick (sensor) {
+      const { id } = this.deviceInfo
+      this.bindingModalControl = false
+      this.bindingList.push({ deviceId: id, sensor })
+      console.log(`Add sensor: ${JSON.stringify({ deviceId: id, sensor })}`)
     }
   },
   watch: {
     deviceInfo (val) {
-      this.formItem = JSON.parse(JSON.stringify(this.deviceInfo))
+      this.formItem = JSON.parse(JSON.stringify(val))
       // console.log(`deviceInfo: ${JSON.stringify(val)}`)
-    },
-    formItem (val) {
-      // console.log(`formItme: ${JSON.stringify(val)}`)
     }
   },
   mounted () {

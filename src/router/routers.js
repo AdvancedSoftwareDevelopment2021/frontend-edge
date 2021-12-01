@@ -1,5 +1,5 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
+// import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -76,6 +76,7 @@ export default [
   },
   {
     path: '/device',
+    name: '_device',
     component: Main,
     meta: {
       hideInMenu: true,
@@ -88,10 +89,21 @@ export default [
         meta: {
           hideInMenu: true,
           title: '设备',
-          notCache: true,
+          notCache: true
         },
         component: () => import('@/view/device/device.vue')
+      },
+      {
+        path: '/deviceDetail',
+        name: 'deviceDetail',
+        meta: {
+          hideInMenu: true,
+          title: '设备详情',
+          notCache: true
+        },
+        component: () => import('@/view/device/device-detail.vue'),
+        props: true
       }
     ]
-  },
+  }
 ]
