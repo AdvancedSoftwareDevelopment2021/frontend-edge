@@ -146,10 +146,10 @@ export default {
         value: 'Modbus',
         label: 'Modbus'
       },
-      {
-        value: 'Canbus',
-        label: 'Canbus'
-      },
+      // {
+      //   value: 'Canbus',
+      //   label: 'Canbus'
+      // },
       {
         value: 'ZigBee',
         label: 'ZigBee'

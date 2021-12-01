@@ -28,9 +28,9 @@ export default [
     component: () => import('@/view/login/login.vue')
   },
   {
-    path: '/',
+    path: '/home',
     name: '_home',
-    redirect: '/home',
+    // redirect: '/home',
     component: Main,
     meta: {
       hideInMenu: true,
@@ -75,7 +75,8 @@ export default [
     component: () => import('@/view/error-page/404.vue')
   },
   {
-    path: '/device',
+    path: '/',
+    redirect: '/device',
     name: '设备管理',
     component: Main,
     meta: {
@@ -84,7 +85,7 @@ export default [
     },
     children: [
       {
-        path: '',
+        path: '/device',
         name: '设备管理',
         meta: {
           hideInMenu: true,
@@ -94,13 +95,23 @@ export default [
         component: () => import('@/view/device/device.vue')
       },
       {
-        path: 'deviceDetail',
+        path: '/deviceDetail',
         name: '设备详情',
         meta: {
           hideInMenu: true,
-          title: '设备详情',
+          title: '设备详情'
         },
         component: () => import('@/view/device/device-detail.vue'),
+        props: true
+      },
+      {
+        path: '/deviceHistoryData',
+        name: '设备历史数据',
+        meta: {
+          hideInMenu: true,
+          title: '设备历史数据'
+        },
+        component: () => import('@/view/device/device-history-data.vue'),
         props: true
       }
     ]
