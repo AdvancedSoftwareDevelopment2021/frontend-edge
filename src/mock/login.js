@@ -17,9 +17,7 @@ const USER_MAP = {
 }
 
 export const login = req => {
-
   req = JSON.parse(req.body)
-  console.log(USER_MAP[req.userName].token)
   return { token: USER_MAP[req.userName].token }
 }
 
