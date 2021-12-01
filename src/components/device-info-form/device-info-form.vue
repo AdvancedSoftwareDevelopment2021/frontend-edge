@@ -82,7 +82,10 @@
             </Button>
           </Col>
         </Row>
-        <Row v-if="isDetailMode && !item.sensorId" :style="{ 'margin-top': '1%' }">
+        <Row
+          v-if="isDetailMode && !item.sensorId"
+          :style="{ 'margin-top': '1%' }"
+        >
           <Col span="3">
             <Button type="primary" @click="dataSourceBindingBtnClick(item)">
               绑定传感器
@@ -129,10 +132,16 @@
             <Input disabled placeholder="请选择传感器" />
           </Col>
         </Row>
-        <Row v-else :style="{ 'margin-top': '1%' }">
-          <div>
-            获取传感器实时数据
-          </div>
+        <Row
+          v-else-if="isDetailMode && item.sensorId"
+          :style="{ 'margin-top': '1%' }"
+        >
+          <Col span="6">
+            <span>获取传感器实时数据</span>
+          </Col>
+          <!-- <Col span="3">
+            <Button type="info">Info</Button>
+          </Col> -->
         </Row>
       </FormItem>
       <FormItem v-if="!isDetailMode">
@@ -200,9 +209,7 @@ export default {
       formItem,
       loading: false,
       bindingModalControl: false,
-      activeDataSource: {
-
-      },
+      activeDataSource: {},
       bindingList: []
     }
   },
@@ -224,7 +231,11 @@ export default {
     async confirmBtnClick () {
       let newDevice = this.formItem
       this.loading = true
-      if (this.isDetailMode) { await this.parentConfirmBtnClick(this.bindingList) } else { await this.parentConfirmBtnClick(newDevice) }
+      if (this.isDetailMode) {
+        await this.parentConfirmBtnClick(this.bindingList)
+      } else {
+        await this.parentConfirmBtnClick(newDevice)
+      }
       this.loading = false
       this.resetFormItem()
     },
