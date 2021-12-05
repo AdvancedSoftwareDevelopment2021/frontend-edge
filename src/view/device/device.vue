@@ -222,7 +222,7 @@ export default {
     // }
   },
   watch: {},
-  mounted() {
+  mounted () {
     // TODO: 如果有网络延迟的话，可能会卡顿，或者在mounted中发请求？
     this.getDeviceListAction()
   }
