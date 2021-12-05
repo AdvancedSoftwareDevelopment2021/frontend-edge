@@ -1,32 +1,32 @@
 <template>
   <div>
     <Form :model="newSensorFormItem" :label-width="80">
-      <Row>
-        <Col span="12">
-          <FormItem label="Interval">
-            <Input
-              v-model="newSensorFormItem.collectScheduler.interval"
-              placeholder="请输入数据回传间隔时间"
-            ></Input>
-          </FormItem>
-        </Col>
-        <Col span="12">
-          <FormItem label="Unit">
-            <Select
-              v-model="newSensorFormItem.collectScheduler.unit"
-              placeholder="请选择时间单位"
-            >
-              <Option
-                v-for="item in unitList"
-                :value="item.value"
-                :key="item.value"
-              >
-                {{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-        </Col>
-      </Row>
+<!--      <Row>-->
+<!--        <Col span="12">-->
+<!--          <FormItem label="Interval">-->
+<!--            <Input-->
+<!--              v-model="newSensorFormItem.collectScheduler.interval"-->
+<!--              placeholder="请输入数据回传间隔时间"-->
+<!--            ></Input>-->
+<!--          </FormItem>-->
+<!--        </Col>-->
+<!--        <Col span="12">-->
+<!--          <FormItem label="Unit">-->
+<!--            <Select-->
+<!--              v-model="newSensorFormItem.collectScheduler.unit"-->
+<!--              placeholder="请选择时间单位"-->
+<!--            >-->
+<!--              <Option-->
+<!--                v-for="item in unitList"-->
+<!--                :value="item.value"-->
+<!--                :key="item.value"-->
+<!--              >-->
+<!--                {{ item.label }}-->
+<!--              </Option>-->
+<!--            </Select>-->
+<!--          </FormItem>-->
+<!--        </Col>-->
+<!--      </Row>-->
       <Row>
         <Col span="24">
           <FormItem label="uri">

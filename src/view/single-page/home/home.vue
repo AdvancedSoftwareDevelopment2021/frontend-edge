@@ -104,19 +104,19 @@ export default {
         Sat: 1322,
         Sun: 1324,
       },
-    };
+    }
   },
   methods: {
     handleBtnDevicePageClick() {
       this.$router.push({
         name: "device",
-      });
+      })
     },
   },
   mounted() {
     //
   },
-};
+}
 </script>
 
 <style lang="less">

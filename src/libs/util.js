@@ -16,6 +16,13 @@ export const getToken = () => {
   else return false
 }
 
+/**
+ * 根据后端返回的自定义状态码判断请求是否成功处理
+ * @param {number} code 后端返回的自定义状态码
+ * @returns {boolean}
+ */
+export const success = (code) => code === 0
+
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }

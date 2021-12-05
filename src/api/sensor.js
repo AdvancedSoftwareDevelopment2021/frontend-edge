@@ -28,3 +28,18 @@ export const getSensorAllHistoryDataApi = ({ deviceId, sensorName }) => {
     method: 'get'
   })
 }
+
+
+export const sensorMonitorStartCommandApi = ({ deviceId, sensorId }) => {
+  return axios.request({
+    url: `command/start_monitor/${deviceId}/${sensorId}`,
+    method: 'post'
+  })
+}
+
+export const sensorMonitorStopCommandApi = ({ deviceId, sensorId }) => {
+  return axios.request({
+    url: `command/stop_monitor/${deviceId}/${sensorId}`,
+    method: 'post'
+  })
+}

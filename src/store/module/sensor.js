@@ -2,6 +2,8 @@ import {
   addSensorApi,
   sensorStartCommandApi,
   sensorStopCommandApi,
+  sensorMonitorStopCommandApi,
+  sensorMonitorStartCommandApi,
   getSensorAllHistoryDataApi
 } from '@/api/sensor'
 
@@ -40,10 +42,10 @@ export default {
       },
       WebSocket: {
         name: '',
-        collectScheduler: {
-          interval: 1,
-          unit: 'SECOND'
-        },
+        // collectScheduler: {
+        //   interval: 1,
+        //   unit: 'SECOND'
+        // },
         dataCollector: {
           type: 'WebSocket',
           uri: 'http://localhost:8000/websocket'
@@ -64,7 +66,22 @@ export default {
     unitList: [
       {
         value: 'SECOND',
-        label: 'SECOND'
+        label: '秒'
+      },{
+        value: 'MINUTE',
+        label: '分'
+      }, {
+        value: 'HOUR',
+        label: '小时'
+      },{
+        value: 'DAY',
+        label: '天'
+      },{
+        value: 'WEEK',
+        label: '周'
+      },{
+        value: 'MONTH',
+        label: '月'
       }
     ],
     allHistoryDataList: []
@@ -82,7 +99,10 @@ export default {
       { state },
       { deviceId, newSensor }
     ) {
-      await addSensorApi({ deviceId, newSensor })
+      if(newSensor.dataCollector.type === 'WebSocket') {
+        newSensor.dataCollector.uri = newSensor.dataCollector.uri + '/' + deviceId
+      }
+        await addSensorApi({ deviceId, newSensor })
       console.log(
         `Add sensor deviceId: ${deviceId}, sensorName: ${newSensor.name}}`
       )
@@ -100,6 +120,17 @@ export default {
       await sensorStopCommandApi({ deviceId, sensorId })
       console.log(`${sensorName}(${deviceId}): stop`)
     },
+    async sensorMonitorStartCommandAction (
+      { state },
+      { deviceId, sensorId, sensorName }
+    ) {
+      await sensorMonitorStartCommandApi({ deviceId, sensorId })
+      console.log(`${sensorName}(${deviceId}): start`)
+    },
+    async sensorMonitorStopCommandAction ({ state }, { deviceId, sensorId, sensorName }) {
+      await sensorMonitorStopCommandApi({ deviceId, sensorId })
+      console.log(`${sensorName}(${deviceId}): stop`)
+    },
     async getSensorAllHistoryDataAction (
       { commit },
       { deviceId, sensorId, sensorName }
@@ -108,14 +139,14 @@ export default {
         .then((res) => {
           commit('setSensorAllHistoryData', {
             sensorName,
-            allHistoryDataList: res.data.object
+            allHistoryDataList: res.data
           })
-        })
-        .catch(() => {
+        }).catch(e => {
           commit('setSensorAllHistoryData', {
             sensorName,
             allHistoryDataList: []
           })
+          console.log('失败',e.message)
         })
       console.log(`Get ${sensorName} sensor all history data`)
     }
