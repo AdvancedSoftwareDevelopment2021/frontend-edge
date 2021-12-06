@@ -231,10 +231,9 @@ export default {
     }
   },
   actions: {
-    async getDeviceListAction ({ state, commit }) {
+    async getDeviceListAction ({ commit }) {
       await getDeviceListApi().then((res) => {
-        commit('setDeviceList', res.data.object)
-        // console.log(JSON.stringify(state.deviceList))
+        commit('setDeviceList', res)
       })
       console.log('Get deviceList from DB')
     },
@@ -242,8 +241,8 @@ export default {
       // TODO: 数据内容检查, try catch
       let newDevice = newDeviceInfo
       await addDeviceApi(newDeviceInfo).then((res) => {
-        console.log(res.data.object.id)
-        newDevice = { ...newDevice, id: res.data.object.id }
+        console.log(res.data.id)
+        newDevice = { ...newDevice, id: res.data.id }
         commit('addDevice', newDevice)
       })
       console.log(`Add device ${JSON.stringify(newDevice)}`)

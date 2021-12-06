@@ -134,14 +134,12 @@
           :style="{ 'margin-top': '1%' }"
         >
           <Col span="3">
-            <Button long type="info" @click="startCommandBtnClick(item)"
-              >开始运行</Button
-            >
+            <Button long v-if="item.protocol === 'WebSocket' || item.protocol === 'ZigBee'" @click="startMonitorCommandBtnClick(item)">开始监听</Button>
+            <Button long type="info" @click="startCommandBtnClick(item)" v-else>开始采集</Button>
           </Col>
           <Col span="3">
-            <Button long type="info" @click="stopCommandBtnClick(item)"
-              >停止</Button
-            >
+            <Button long v-if="item.protocol === 'WebSocket' || item.protocol === 'ZigBee'" @click="stopMonitorCommandBtnClick(item)">停止监听</Button>
+            <Button long type="info" @click="stopCommandBtnClick(item)" v-else>停止采集</Button>
           </Col>
         </Row>
       </FormItem>
@@ -228,7 +226,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sensorStartCommandAction', 'sensorStopCommandAction']),
+    ...mapActions(['sensorStartCommandAction', 'sensorStopCommandAction', 'sensorMonitorStartCommandAction', 'sensorMonitorStopCommandAction']),
     // 因为当parentConfirmBtnClick为Component addDevice所传的方法时，是异步方法，所以要在这加async用来等待异步完成
     async confirmBtnClick () {
       let newDevice = this.formItem
@@ -288,6 +286,18 @@ export default {
       const sensorId = item.sensorId
       const sensorName = item.name
       await this.sensorStopCommandAction({ deviceId, sensorId, sensorName })
+    },
+    async startMonitorCommandBtnClick (item) {
+      const deviceId = this.deviceInfo.id
+      const sensorId = item.sensorId
+      const sensorName = item.name
+      await this.sensorMonitorStartCommandAction({ deviceId, sensorId, sensorName })
+    },
+    async stopMonitorCommandBtnClick (item) {
+      const deviceId = this.deviceInfo.id
+      const sensorId = item.sensorId
+      const sensorName = item.name
+      await this.sensorMonitorStopCommandAction({ deviceId, sensorId, sensorName })
     }
   },
   watch: {

@@ -222,9 +222,9 @@ export default {
     // }
   },
   watch: {},
-  async created () {
+  mounted () {
     // TODO: 如果有网络延迟的话，可能会卡顿，或者在mounted中发请求？
-    await this.getDeviceListAction()
+    this.getDeviceListAction()
   }
 }
 </script>
