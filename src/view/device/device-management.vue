@@ -6,11 +6,13 @@
       </Col>
       <!-- TODO: 实现search 功能 -->
       <Col span="10">
-        <Input
-          v-model="searchInput"
-          search
-          placeholder="输入设备名字搜索设备"
-        />
+        <label>
+          <Input
+            v-model="searchInput"
+            search
+            placeholder="输入设备名字搜索设备"
+          />
+        </label>
       </Col>
     </Row>
     <Row>
@@ -95,13 +97,11 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import addDevice from '_c/add-device'
 import deviceInfoForm from '_c/device-info-form'
-import addSensor from '_c/add-sensor'
+
 export default {
-  name: 'device',
   components: {
     addDevice,
-    deviceInfoForm,
-    addSensor
+    deviceInfoForm
   },
   data () {
     return {
@@ -160,15 +160,15 @@ export default {
       let ret = ''
       switch (statue) {
         case 1: {
-          ret = '<span style="color: green">处理中</span>'
+          ret = '<span style="color:green">处理中</span>'
           break
         }
         case 2: {
-          ret = '<span style="color: green">空闲</span>'
+          ret = '<span style="color:green">空闲</span>'
           break
         }
         case 3: {
-          ret = '<span style="color: red">出错</span>'
+          ret = '<span style="color:red">出错</span>'
           break
         }
       }

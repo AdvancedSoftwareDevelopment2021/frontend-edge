@@ -92,7 +92,7 @@ export default [
           title: '设备管理',
           icon: 'logo-buffer'
         },
-        component: () => import('@/view/device/device.vue')
+        component: () => import('@/view/device/device-management.vue')
       },
       {
         path: '/deviceDetail',
