@@ -22,6 +22,7 @@ export const login = req => {
 }
 
 export const getUserInfo = req => {
+  // console.log(`getUserInfo request: ${JSON.stringify(req)}`)
   const params = getParams(req.url)
   return { data: USER_MAP[params.token] }
 }

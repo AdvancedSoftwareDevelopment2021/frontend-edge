@@ -81,7 +81,7 @@ export default {
           userName,
           password
         }).then(res => {
-          console.log(res)
+          console.log(`Login response: ${JSON.stringify(res)}`)
           const data = res.data
           commit('setToken', data.token)
           resolve()
