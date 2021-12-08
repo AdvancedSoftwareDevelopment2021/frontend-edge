@@ -1,7 +1,6 @@
 <template>
   <div>
     <Button type="primary" @click="addDeviceBtnClick" icon="md-add-circle">
-      <!-- <Icon type="md-add-circle" /> -->
       新增设备
     </Button>
     <Modal v-model="modalControl" title="新增设备" footer-hide :closable="false">

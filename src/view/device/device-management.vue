@@ -29,32 +29,12 @@
           shadow
           style="width: 300px"
         >
-          <!-- <Badge :status="handleStatus(device.status)" slot="extra">
-            <a href="#" class="demo-badge"></a>
-          </Badge> -->
           <CellGroup>
-            <!-- <Cell :title="'类型: ' + device.category" /> -->
             <Cell :title="'型号: ' + device.model" />
-            <!--            <Cell title="设备状态">-->
-            <!--              <span slot="extra" v-html="handleStatusCell(device.status)" />-->
-            <!--            </Cell>-->
             <div @click="deviceDetailClick(device.id)">
               <Cell title="查看设备详细内容">
                 <Icon slot="extra" type="ios-link" />
               </Cell>
-              <!-- <Modal
-                v-model="detailModalControl"
-                title="设备详细内容"
-                footer-hide
-                :closable="false"
-              >
-                <device-info-form
-                  :deviceInfo="activeDevice"
-                  :parentCancelBtnClick="detailCancelBtnClick"
-                  :parentConfirmBtnClick="detailConfirmBtnClick"
-                >
-                </device-info-form>
-              </Modal> -->
             </div>
             <div @click="deviceHistoryDataClick(device.id)">
               <Cell title="查看设备历史数据">
@@ -132,7 +112,7 @@ export default {
     ...mapGetters(['formItem'])
   },
   methods: {
-    ...mapMutations(['modeChange']),
+    ...mapMutations(['modeChange', 'setDeviceInfo', 'setDeviceInfoForHistory', 'releaseSensorAllHistoryData']),
     ...mapActions([
       'modifyDeviceListAction',
       'getDeviceListAction',
@@ -192,38 +172,24 @@ export default {
       this.deleteDeviceAction(listId)
     },
     deviceDetailClick (deviceId) {
-      // this.detailModalControl = true
-      this.activeDevice = this.deviceList.find(
+      const deviceInfo = this.deviceList.find(
         (device) => device.id === deviceId
       )
-      this.$router.push({
-        name: '设备详情',
-        params: {
-          device: this.activeDevice
-        }
-      })
+      this.setDeviceInfo(deviceInfo)
+      this.$router.push('/device/detail')
       this.modeChange('DETAIL')
     },
-    // TODO: 其实可以不传device.id，直接传device就不用find
     deviceHistoryDataClick (deviceId) {
-      this.activeDevice = this.deviceList.find((device) => device.id === deviceId)
-      this.$router.push({
-        name: '设备历史数据',
-        params: {
-          device: this.activeDevice
-        }
-      })
+      const deviceInfo = this.deviceList.find(
+        (device) => device.id === deviceId
+      )
+      this.releaseSensorAllHistoryData()
+      this.setDeviceInfoForHistory(deviceInfo)
+      this.$router.push('/device/history')
     }
-    // detailConfirmBtnClick () {
-    //   this.detailModalControl = false
-    // },
-    // detailCancelBtnClick () {
-    //   this.detailModalControl = false
-    // }
   },
   watch: {},
   mounted () {
-    // TODO: 如果有网络延迟的话，可能会卡顿，或者在mounted中发请求？
     this.getDeviceListAction()
   }
 }
