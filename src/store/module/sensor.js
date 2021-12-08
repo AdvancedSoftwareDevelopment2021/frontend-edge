@@ -67,19 +67,19 @@ export default {
       {
         value: 'SECOND',
         label: '秒'
-      },{
+      }, {
         value: 'MINUTE',
         label: '分'
       }, {
         value: 'HOUR',
         label: '小时'
-      },{
+      }, {
         value: 'DAY',
         label: '天'
-      },{
+      }, {
         value: 'WEEK',
         label: '周'
-      },{
+      }, {
         value: 'MONTH',
         label: '月'
       }
@@ -88,7 +88,9 @@ export default {
   },
   mutations: {
     setSensorAllHistoryData (state, { sensorName, allHistoryDataList }) {
-      state.allHistoryDataList.push({ sensorName, historyDataList: allHistoryDataList })
+      if (!state.allHistoryDataList.some(c => c.sensorName === sensorName)) {
+        state.allHistoryDataList.push({ sensorName, historyDataList: allHistoryDataList })
+      }
     },
     releaseSensorAllHistoryData (state) {
       state.allHistoryDataList = []
@@ -99,10 +101,10 @@ export default {
       { state },
       { deviceId, newSensor }
     ) {
-      if(newSensor.dataCollector.type === 'WebSocket') {
+      if (newSensor.dataCollector.type === 'WebSocket') {
         newSensor.dataCollector.uri = newSensor.dataCollector.uri + '/' + deviceId
       }
-        await addSensorApi({ deviceId, newSensor })
+      await addSensorApi({ deviceId, newSensor })
       console.log(
         `Add sensor deviceId: ${deviceId}, sensorName: ${newSensor.name}}`
       )
@@ -146,7 +148,6 @@ export default {
             sensorName,
             allHistoryDataList: []
           })
-          console.log('失败',e.message)
         })
       console.log(`Get ${sensorName} sensor all history data`)
     }

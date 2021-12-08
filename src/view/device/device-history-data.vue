@@ -20,11 +20,6 @@ import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'deviceHistoryData',
-  props: {
-    device: {
-      type: Object
-    }
-  },
   data () {
     return {
       collapseValue: '',
@@ -43,29 +38,26 @@ export default {
   },
   computed: {
     ...mapState({
-      allHistoryDataList: (state) => state.sensor.allHistoryDataList
+      allHistoryDataList: (state) => state.sensor.allHistoryDataList,
+      deviceItem: (state) => state.device.deviceInfoForHistory
     })
   },
   methods: {
     ...mapMutations(['releaseSensorAllHistoryData']),
-    ...mapActions(['getSensorAllHistoryDataAction'])
+    ...mapActions(['getSensorAllHistoryDataAction']),
+    refresh () {
+      for (let { name, sensorId } of this.deviceItem.values) {
+        this.getSensorAllHistoryDataAction({
+          deviceId: this.deviceItem.id,
+          sensorId,
+          sensorName: name
+        })
+      }
+    }
   },
   watch: {},
   mounted () {
-    console.log(this.allHistoryDataList)
-  },
-  async created () {
-    for (let { name, sensorId } of this.device.values) {
-      await this.getSensorAllHistoryDataAction({
-        deviceId: this.device.id,
-        sensorId,
-        sensorName: name
-      })
-    }
-  },
-  destroyed () {
-    this.releaseSensorAllHistoryData()
-    console.log('Release history data')
+    this.refresh()
   }
 }
 </script>

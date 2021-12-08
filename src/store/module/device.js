@@ -4,116 +4,17 @@ import {
   addDeviceApi,
   modifyDeviceApi
 } from '@/api/device'
-import Mock from 'mockjs'
 
 export default {
   state: {
-    /* deviceList: [
-      {
-        id: 1,
-        name: 'machine1',
-        model: 'RTX1',
-        // category: '加热器',
-        description: '',
-        status: 1,
-        values: [
-          {
-            valueIndex: 1,
-            name: 'name',
-            type: 'String',
-            protocol: 'Modbus'
-          }
-        ]
-      },
-      {
-        id: 2,
-        name: 'machine2',
-        model: 'RTX2',
-        // category: '加热器',
-        description: '',
-        status: 2,
-        values: [
-          {
-            valueIndex: 1,
-            name: 'name',
-            type: 'String',
-            protocol: 'Modbus'
-          }
-        ]
-      },
-      {
-        id: 3,
-        name: 'machine3',
-        model: 'RTX3',
-        // category: '加热器',
-        description: '',
-        status: 3,
-        values: [
-          {
-            valueIndex: 1,
-            name: 'name',
-            type: 'String',
-            protocol: 'Modbus'
-          }
-        ]
-      },
-      {
-        id: 4,
-        name: 'machine4',
-        model: 'RTX4',
-        // category: '加热器',
-        description: '',
-        status: 2,
-        values: [
-          {
-            valueIndex: 1,
-            name: 'name',
-            type: 'String',
-            protocol: 'Modbus'
-          }
-        ]
-      },
-      {
-        id: 5,
-        name: 'machine5',
-        model: 'RTX5',
-        // category: '加热器',
-        description: '',
-        status: 3,
-        values: [
-          {
-            valueIndex: 1,
-            name: 'name',
-            type: 'String',
-            protocol: 'Modbus'
-          }
-        ]
-      }
-    ], */
     deviceList: [],
-    // _formItem: Mock.mock({
-    //   id: 0,
-    //   'name|1': /[a-zA-Z0-9]{5,8}/,
-    //   // category: 'test2',
-    //   'model|1': /[A-Z]{5,8}[0-9]{2,3}/,
-    //   'description|2': /[a-zA-Z0-9]{5,8} /,
-    //   'status|1': 2,
-    //   'values|1-4': [
-    //     {
-    //       'valueIndex|+1': 1,
-    //       'name|1': /[a-zA-Z0-9]{5,8}/,
-    //       'type|1': ['Integer', 'String', 'Object', 'Boolean'],
-    //       'protocol|1': ['Modbus', 'Canbus', 'ZigBee', 'WebSocket', 'Http']
-    //     }
-    //   ]
-    // }),
-    _formItem: Mock.mock({
-      id: 0,
+    deviceInfo: null,
+    deviceInfoForHistory: null,
+    _formItem: {
       name: null,
       // category: 'test2',
       model: null,
       description: null,
-      status: 2,
       values: [
         {
           valueIndex: 1,
@@ -122,7 +23,7 @@ export default {
           protocol: null
         }
       ]
-    }),
+    },
     deviceDataTypeList: [
       {
         value: 'Integer',
@@ -188,22 +89,20 @@ export default {
   },
   mutations: {
     resetFormItem (state) {
-      state._formItem = Mock.mock({
-        id: 0,
-        'name|1': /[a-zA-Z0-9]{5,8}/,
+      state._formItem = {
+        name: null,
         // category: 'test2',
-        'model|1': /[A-Z]{5,8}[0-9]{2,3}/,
-        'description|2': /[a-zA-Z0-9]{5,8} /,
-        'status|1': 2,
-        'values|1-4': [
+        model: null,
+        description: null,
+        values: [
           {
-            'valueIndex|+1': 1,
-            'name|1': /[a-zA-Z0-9]{5,8}/,
-            'type|1': ['Integer', 'String', 'Object', 'Boolean'],
-            'protocol|1': ['Modbus', 'Canbus', 'ZigBee', 'WebSocket', 'Http']
+            valueIndex: 1,
+            name: null,
+            type: null,
+            protocol: null
           }
         ]
-      })
+      }
     },
     setDeviceList (state, deviceList) {
       state.deviceList = deviceList
@@ -227,7 +126,12 @@ export default {
     },
     modeChange (state, newMode) {
       state.mode = newMode
-      console.log(newMode)
+    },
+    setDeviceInfo (state, deviceInfo) {
+      state.deviceInfo = deviceInfo
+    },
+    setDeviceInfoForHistory (state, deviceInfoForHistory) {
+      state.deviceInfoForHistory = deviceInfoForHistory
     }
   },
   actions: {
