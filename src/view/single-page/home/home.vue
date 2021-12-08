@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <button @click="handleBtnDevicePageClick">Go to device page</button> -->
+    <button @click="handleBtnDevicePageClick">Go to device page</button>
     <Row :gutter="20">
       <i-col
         :xs="12"
@@ -109,7 +109,7 @@ export default {
   methods: {
     handleBtnDevicePageClick () {
       this.$router.push({
-        name: 'device'
+        name: '设备管理'
       })
     }
   },

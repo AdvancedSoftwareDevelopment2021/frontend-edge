@@ -66,6 +66,7 @@ export default {
     ABackTop
   },
   data () {
+    // FIXME: minLogo图片打不开
     return {
       collapsed: false,
       minLogo,
