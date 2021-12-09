@@ -44,22 +44,23 @@
           <Col span="5">
             <Select :disabled="isDetailMode" v-model="item.type">
               <Option
-                v-for="item in deviceDataTypeList"
-                :value="item.value"
-                :key="item.value"
+                v-for="dataTypeItem in deviceDataTypeList"
+                :value="dataTypeItem.value"
+                :key="dataTypeItem.value"
               >
-                {{ item.label }}
+                {{ dataTypeItem.label }}
               </Option>
             </Select>
           </Col>
           <Col span="6">
             <Select :disabled="isDetailMode" v-model="item.protocol">
               <Option
-                v-for="item in deviceDataProtocolList"
-                :value="item.value"
-                :key="item.value"
-                >{{ item.label }}</Option
+                v-for="protocolItem in deviceDataProtocolList"
+                :value="protocolItem.value"
+                :key="protocolItem.value"
               >
+                {{ protocolItem.label }}
+              </Option>
             </Select>
           </Col>
           <Col span="1">
@@ -134,12 +135,26 @@
           :style="{ 'margin-top': '1%' }"
         >
           <Col span="3">
-            <Button long v-if="item.protocol === 'WebSocket' || item.protocol === 'ZigBee'" @click="startMonitorCommandBtnClick(item)">开始监听</Button>
-            <Button long type="info" @click="startCommandBtnClick(item)" v-else>开始采集</Button>
+            <Button
+              long
+              v-if="item.protocol === 'WebSocket' || item.protocol === 'ZigBee'"
+              @click="startMonitorCommandBtnClick(item)"
+              >开始监听</Button
+            >
+            <Button long type="info" @click="startCommandBtnClick(item)" v-else
+              >开始采集</Button
+            >
           </Col>
           <Col span="3">
-            <Button long v-if="item.protocol === 'WebSocket' || item.protocol === 'ZigBee'" @click="stopMonitorCommandBtnClick(item)">停止监听</Button>
-            <Button long type="info" @click="stopCommandBtnClick(item)" v-else>停止采集</Button>
+            <Button
+              long
+              v-if="item.protocol === 'WebSocket' || item.protocol === 'ZigBee'"
+              @click="stopMonitorCommandBtnClick(item)"
+              >停止监听</Button
+            >
+            <Button long type="info" @click="stopCommandBtnClick(item)" v-else
+              >停止采集</Button
+            >
           </Col>
         </Row>
       </FormItem>
@@ -226,7 +241,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sensorStartCommandAction', 'sensorStopCommandAction', 'sensorMonitorStartCommandAction', 'sensorMonitorStopCommandAction']),
+    ...mapActions([
+      'sensorStartCommandAction',
+      'sensorStopCommandAction',
+      'sensorMonitorStartCommandAction',
+      'sensorMonitorStopCommandAction'
+    ]),
     // 因为当parentConfirmBtnClick为Component addDevice所传的方法时，是异步方法，所以要在这加async用来等待异步完成
     async confirmBtnClick () {
       let newDevice = this.formItem
@@ -264,7 +284,7 @@ export default {
     dataSourceBindingBtnClick (item) {
       this.bindingModalControl = true
       this.activeDataSource = item
-      console.log(this.activeDataSource)
+      // console.log(this.activeDataSource)
     },
     dataSourceBindingCancelBtnClick () {
       this.bindingModalControl = false
@@ -291,13 +311,21 @@ export default {
       const deviceId = this.deviceInfo.id
       const sensorId = item.sensorId
       const sensorName = item.name
-      await this.sensorMonitorStartCommandAction({ deviceId, sensorId, sensorName })
+      await this.sensorMonitorStartCommandAction({
+        deviceId,
+        sensorId,
+        sensorName
+      })
     },
     async stopMonitorCommandBtnClick (item) {
       const deviceId = this.deviceInfo.id
       const sensorId = item.sensorId
       const sensorName = item.name
-      await this.sensorMonitorStopCommandAction({ deviceId, sensorId, sensorName })
+      await this.sensorMonitorStopCommandAction({
+        deviceId,
+        sensorId,
+        sensorName
+      })
     }
   },
   watch: {

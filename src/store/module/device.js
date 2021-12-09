@@ -145,14 +145,13 @@ export default {
       // TODO: 数据内容检查, try catch
       let newDevice = newDeviceInfo
       await addDeviceApi(newDeviceInfo).then((res) => {
-        console.log(res.data.id)
-        newDevice = { ...newDevice, id: res.data.id }
+        newDevice = { ...newDevice, id: res.id }
         commit('addDevice', newDevice)
       })
       console.log(`Add device ${JSON.stringify(newDevice)}`)
     },
     async deleteDeviceAction ({ state, commit, dispatch }, listId) {
-      // TODO: delete data sources
+      // TODO: delete sensor that binding by this device
       const deviceId = state.deviceList[listId].id
       await deleteDeviceApi(deviceId)
       commit('deleteDevice', { listId, deviceId })

@@ -5,7 +5,7 @@
     </Button>
     <Modal v-model="modalControl" title="新增设备" footer-hide :closable="false">
       <device-info-form
-        :deviceInfo="deviceInfo"
+        :deviceInfo="formItem"
         :parentCancelBtnClick="modalCancelBtnClick"
         :parentConfirmBtnClick="modalConfirmBtnClick"
       >
@@ -14,24 +14,26 @@
   </div>
 </template>
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import deviceInfoForm from '_c/device-info-form'
 export default {
   name: 'addDevice',
   components: {
     deviceInfoForm
   },
-  props: {
-    deviceInfo: {
-      type: Object
-    }
-  },
+  // props: {
+  //   deviceInfo: {
+  //     type: Object
+  //   }
+  // },
   data () {
     return {
       modalControl: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['formItem'])
+  },
   methods: {
     ...mapMutations(['resetFormItem', 'modeChange']),
     ...mapActions(['addDeviceAction']),

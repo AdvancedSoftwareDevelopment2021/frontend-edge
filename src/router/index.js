@@ -50,6 +50,16 @@ router.beforeEach((to, from, next) => {
       })
     }
   }
+  if (!store.state.device.deviceInfo && to.name === '设备历史数据') {
+    next({
+      name: '设备管理'
+    })
+  }
+  if (!store.state.device.deviceInfo && to.name === '设备详情') {
+    next({
+      name: '设备管理'
+    })
+  }
 })
 
 router.afterEach(to => {

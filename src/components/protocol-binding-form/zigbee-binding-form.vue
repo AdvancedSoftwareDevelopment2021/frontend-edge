@@ -60,6 +60,7 @@
 </template>
 
 <script>
+// FIXME: 开始监听有bug
 import { mapState } from 'vuex'
 export default {
   name: 'zigbeeBindingForm',

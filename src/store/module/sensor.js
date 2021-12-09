@@ -139,9 +139,10 @@ export default {
     ) {
       await getSensorAllHistoryDataApi({ deviceId, sensorName })
         .then((res) => {
+          console.log(res)
           commit('setSensorAllHistoryData', {
             sensorName,
-            allHistoryDataList: res.data
+            allHistoryDataList: res
           })
         }).catch(e => {
           commit('setSensorAllHistoryData', {

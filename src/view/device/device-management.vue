@@ -2,7 +2,7 @@
   <div>
     <Row style="margin: 0 1%">
       <Col span="2">
-        <add-device :deviceInfo="formItem" />
+        <add-device />
       </Col>
       <!-- TODO: 实现search 功能 -->
       <Col span="10">
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import addDevice from '_c/add-device'
 import deviceInfoForm from '_c/device-info-form'
 
@@ -108,8 +108,8 @@ export default {
   computed: {
     ...mapState({
       deviceList: (state) => state.device.deviceList
-    }),
-    ...mapGetters(['formItem'])
+    })
+    // ...mapGetters(['formItem'])
   },
   methods: {
     ...mapMutations(['modeChange', 'setDeviceInfo', 'setDeviceInfoForHistory', 'releaseSensorAllHistoryData']),
@@ -183,6 +183,7 @@ export default {
       const deviceInfo = this.deviceList.find(
         (device) => device.id === deviceId
       )
+      this.setDeviceInfo(deviceInfo)
       this.releaseSensorAllHistoryData()
       this.setDeviceInfoForHistory(deviceInfo)
       this.$router.push('/device/history')
