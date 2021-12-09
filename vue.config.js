@@ -37,7 +37,7 @@ module.exports = {
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   devServer: {
     host: 'localhost',
-    port: 5000,
+    port: 5002,
     // 以上的ip和端口是我们本机的;下面为需要跨域的
     proxy: {
       // 配置跨域

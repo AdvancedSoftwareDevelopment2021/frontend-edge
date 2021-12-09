@@ -92,10 +92,10 @@ export default [
           title: '设备管理',
           icon: 'logo-buffer'
         },
-        component: () => import('@/view/device/device.vue')
+        component: () => import('@/view/device/device-management.vue')
       },
       {
-        path: '/deviceDetail',
+        path: '/device/detail',
         name: '设备详情',
         meta: {
           hideInMenu: true,
@@ -105,7 +105,7 @@ export default [
         props: true
       },
       {
-        path: '/deviceHistoryData',
+        path: '/device/history',
         name: '设备历史数据',
         meta: {
           hideInMenu: true,
