@@ -72,6 +72,10 @@
             >
               <Icon type="md-close" />
             </Button>
+            <div v-else>
+              <!-- <span v-html="handleSensorStatus(item.name)" /> -->
+              <Badge :status="handleSensorStatus(item.name)" />
+            </div>
           </Col>
         </Row>
         <Row
@@ -231,7 +235,8 @@ export default {
     ...mapState({
       deviceDataTypeList: (state) => state.device.deviceDataTypeList,
       deviceDataProtocolList: (state) => state.device.deviceDataProtocolList,
-      mode: (state) => state.device.mode
+      mode: (state) => state.device.mode,
+      deviceStatusList: (state) => state.device.deviceStatusList
     }),
     isUpdateMode () {
       return this.mode === 'UPDATE'
@@ -326,6 +331,19 @@ export default {
         sensorId,
         sensorName
       })
+    },
+    handleSensorStatus (sensorName) {
+      // console.log(sensorName)
+      // console.log(this.formItem.id)
+      // FIXME: 返回到device页面时也会调用这函数，但此时this.formItem, sensorName都为null，故没有sensor.sensorStatus
+      let ret = ''
+      if (sensorName && this.formItem.id) {
+        let deviceStatus = this.deviceStatusList.find((deviceStatus) => deviceStatus.deviceId === this.formItem.id)
+        let sensor = deviceStatus.sensor.find((sensor) => sensor.sensorName === sensorName)
+        if (sensor.sensorStatus === 'failure') { ret = 'error' } else if (sensor.sensorStatus === 'sleeping') { ret = 'success' }
+        console.log(sensor.sensorStatus)
+      }
+      return ret
     }
   },
   watch: {

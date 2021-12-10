@@ -116,7 +116,8 @@ export default {
     ...mapActions([
       'modifyDeviceListAction',
       'getDeviceListAction',
-      'deleteDeviceAction'
+      'deleteDeviceAction',
+      'getDeviceStatusAction'
     ]),
     handleStatus (status) {
       let ret = ''
@@ -190,8 +191,9 @@ export default {
     }
   },
   watch: {},
-  mounted () {
-    this.getDeviceListAction()
+  async mounted () {
+    await this.getDeviceListAction()
+    await this.getDeviceStatusAction()
   }
 }
 </script>

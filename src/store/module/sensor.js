@@ -4,7 +4,8 @@ import {
   sensorStopCommandApi,
   sensorMonitorStopCommandApi,
   sensorMonitorStartCommandApi,
-  getSensorAllHistoryDataApi
+  getSensorAllHistoryDataApi,
+  getSensorLatestStatusApi
 } from '@/api/sensor'
 
 // TODO: 可能要做Number和String的转换
@@ -109,6 +110,7 @@ export default {
         `Add sensor deviceId: ${deviceId}, sensorName: ${newSensor.name}}`
       )
       // FIXME: vuex找不到device的actions getDeviceListAction
+      // 只要 dispatch('getDeviceListAction', {}, {root: true})就可以了
       //   await dispatch('device/getDeviceListAction', {}, {root: true})
     },
     async sensorStartCommandAction (
@@ -151,6 +153,24 @@ export default {
           })
         })
       console.log(`Get ${sensorName} sensor all history data`)
+    },
+    async getSensorLatestStatusAction ({ state, commit }, { deviceWithSensorNameList }) {
+      for (let { deviceId, sensorNameList } of deviceWithSensorNameList) {
+        let sensor = []
+        for (let sensorName of sensorNameList) {
+          await getSensorLatestStatusApi({ deviceId, sensorName }).then((res) => {
+            let status = res.status
+            if (!status) {
+              status = 'failure'
+            }
+            sensor.push({ sensorName, sensorStatus: status })
+          }).catch(() => {
+            sensor.push({ sensorName, sensorStatus: 'failure' })
+          })
+        }
+        commit('setDeviceStatus', { deviceId, sensor: sensor }, { root: true })
+      }
+      console.log(`Get all device status`)
     }
   }
 }

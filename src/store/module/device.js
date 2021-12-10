@@ -64,7 +64,8 @@ export default {
         label: 'Http'
       }
     ],
-    mode: 'ADD'
+    mode: 'ADD',
+    deviceStatusList: []
   },
   getters: {
     formItem (state) {
@@ -132,10 +133,20 @@ export default {
     },
     setDeviceInfoForHistory (state, deviceInfoForHistory) {
       state.deviceInfoForHistory = deviceInfoForHistory
+    },
+    setDeviceStatus (state, deviceStatusList) {
+      // console.log(deviceStatusList)
+      state.deviceStatusList.push(deviceStatusList)
     }
   },
   actions: {
     async getDeviceListAction ({ commit }) {
+      // await new Promise((resolve) => {
+      //   setTimeout(() => {
+      //     resolve()
+      //     return
+      //   }, 3000)
+      // })
       await getDeviceListApi().then((res) => {
         commit('setDeviceList', res)
       })
@@ -151,7 +162,7 @@ export default {
       console.log(`Add device ${JSON.stringify(newDevice)}`)
     },
     async deleteDeviceAction ({ state, commit, dispatch }, listId) {
-      // TODO: delete sensor that binding by this device
+      // TODO: When delete device, I need to delete sensor that binding by this device
       const deviceId = state.deviceList[listId].id
       await deleteDeviceApi(deviceId)
       commit('deleteDevice', { listId, deviceId })
@@ -164,6 +175,10 @@ export default {
       await modifyDeviceApi(updateDeviceInfo)
       commit('modifyDevice', updateDeviceInfo)
       console.log(`Modify device: ${JSON.stringify(updateDeviceInfo)}`)
+    },
+    async getDeviceStatusAction ({ state, dispatch, rootState }) {
+      const deviceWithSensorNameList = state.deviceList.map((device) => ({ deviceId: device.id, sensorNameList: device.values.map((sensor) => (sensor.name)) }))
+      await dispatch('getSensorLatestStatusAction', { deviceWithSensorNameList }, { root: true })
     }
   }
 }
