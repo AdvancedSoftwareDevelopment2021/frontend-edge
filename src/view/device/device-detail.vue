@@ -174,17 +174,28 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import deviceInfoForm from '_c/device-info-form'
+import {
+  modbusBindingForm,
+  zigbeeBindingForm,
+  websocketBindingForm,
+  httpBindingForm
+} from '_c/protocol-binding-form'
 export default {
   name: 'deviceDetail',
   components: {
-    deviceInfoForm
+    deviceInfoForm,
+    modbusBindingForm,
+    zigbeeBindingForm,
+    websocketBindingForm,
+    httpBindingForm
   },
   data () {
     return {
       formItem: null,
       loading: false,
       bindingModalControl: false,
-      activeDataSource: {}
+      activeDataSource: {},
+      bindingList: []
     }
   },
   computed: {
@@ -211,14 +222,11 @@ export default {
       // this.resetFormItem();
       this.$router.go(-1)
     },
-    async confirmBtnClick (bindingList) {
+    async confirmBtnClick () {
       this.loading = true
-      for (let { deviceId, sensor } of bindingList) {
+      for (let { deviceId, sensor } of this.bindingList) {
         await this.addSensorAction({ deviceId, newSensor: sensor })
       }
-      // bindingList.forEach(({ deviceId, sensor }) => {
-      //   this.addSensorAction({ deviceId, sensor })
-      // });
       this.loading = false
       // this.resetFormItem();
       // TODO: 现在每次submit后会返回设备管理页面，然后设备管理页面会重新发请求从数据库取得数据
