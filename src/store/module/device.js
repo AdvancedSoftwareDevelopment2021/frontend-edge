@@ -2,7 +2,8 @@ import {
   getDeviceListApi,
   deleteDeviceApi,
   addDeviceApi,
-  modifyDeviceApi
+  modifyDeviceApi,
+  getDeviceByIdApi
 } from '@/api/device'
 
 export default {
@@ -135,7 +136,6 @@ export default {
       state.deviceInfoForHistory = deviceInfoForHistory
     },
     setDeviceStatus (state, deviceStatusList) {
-      // console.log(deviceStatusList)
       state.deviceStatusList.push(deviceStatusList)
     }
   },
@@ -173,12 +173,16 @@ export default {
       updateDeviceInfo
     ) {
       await modifyDeviceApi(updateDeviceInfo)
-      commit('modifyDevice', updateDeviceInfo)
-      console.log(`Modify device: ${JSON.stringify(updateDeviceInfo)}`)
+      let res = await getDeviceByIdApi(updateDeviceInfo.id)
+      commit('modifyDevice', res)
+      await dispatch('getDeviceStatusAction')
+      console.log(`Modify device: ${JSON.stringify(res)}`)
     },
     async getDeviceStatusAction ({ state, dispatch, rootState }) {
+      state.deviceStatusList = []
       const deviceWithSensorNameList = state.deviceList.map((device) => ({ deviceId: device.id, sensorNameList: device.values.map((sensor) => (sensor.name)) }))
       await dispatch('getSensorLatestStatusAction', { deviceWithSensorNameList }, { root: true })
+      console.log(state.deviceStatusList)
     }
   }
 }

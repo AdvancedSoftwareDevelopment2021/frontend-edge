@@ -42,3 +42,10 @@ export const modifyDeviceApi = (updateDeviceInfo) => {
     }
   })
 }
+
+export const getDeviceByIdApi = (deviceId) => {
+  return axios.request({
+    url: `device/${deviceId}`,
+    method: 'get'
+  })
+}

@@ -338,9 +338,17 @@ export default {
       // FIXME: 返回到device页面时也会调用这函数，但此时this.formItem, sensorName都为null，故没有sensor.sensorStatus
       let ret = ''
       if (sensorName && this.formItem.id) {
-        let deviceStatus = this.deviceStatusList.find((deviceStatus) => deviceStatus.deviceId === this.formItem.id)
-        let sensor = deviceStatus.sensor.find((sensor) => sensor.sensorName === sensorName)
-        if (sensor.sensorStatus === 'failure') { ret = 'error' } else if (sensor.sensorStatus === 'sleeping') { ret = 'success' }
+        let deviceStatus = this.deviceStatusList.find(
+          (deviceStatus) => deviceStatus.deviceId === this.formItem.id
+        )
+        let sensor = deviceStatus.sensor.find(
+          (sensor) => sensor.sensorName === sensorName
+        )
+        if (sensor.sensorStatus === 'failure') {
+          ret = 'error'
+        } else if (sensor.sensorStatus === 'sleeping') {
+          ret = 'success'
+        }
         console.log(sensor.sensorStatus)
       }
       return ret

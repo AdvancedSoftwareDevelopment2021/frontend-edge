@@ -168,6 +168,7 @@ export default {
             sensor.push({ sensorName, sensorStatus: 'failure' })
           })
         }
+        // console.log({ deviceId, sensor: sensor })
         commit('setDeviceStatus', { deviceId, sensor: sensor }, { root: true })
       }
       console.log(`Get all device status`)
