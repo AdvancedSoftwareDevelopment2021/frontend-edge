@@ -12,6 +12,11 @@
         </p>
       </Panel>
     </Collapse>
+    <Row :gutter="8" type="flex" justify="end">
+        <Col>
+          <Button @click="returnBtnClick">返回</Button>
+        </Col>
+      </Row>
   </div>
 </template>
 
@@ -53,6 +58,9 @@ export default {
           sensorName: name
         })
       }
+    },
+    returnBtnClick () {
+      this.$router.go(-1)
     }
   },
   watch: {},

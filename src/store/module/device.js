@@ -2,7 +2,8 @@ import {
   getDeviceListApi,
   deleteDeviceApi,
   addDeviceApi,
-  modifyDeviceApi
+  modifyDeviceApi,
+  getDeviceByIdApi
 } from '@/api/device'
 
 export default {
@@ -64,7 +65,8 @@ export default {
         label: 'Http'
       }
     ],
-    mode: 'ADD'
+    mode: 'ADD',
+    deviceStatusList: []
   },
   getters: {
     formItem (state) {
@@ -132,10 +134,19 @@ export default {
     },
     setDeviceInfoForHistory (state, deviceInfoForHistory) {
       state.deviceInfoForHistory = deviceInfoForHistory
+    },
+    setDeviceStatus (state, deviceStatusList) {
+      state.deviceStatusList.push(deviceStatusList)
     }
   },
   actions: {
     async getDeviceListAction ({ commit }) {
+      // await new Promise((resolve) => {
+      //   setTimeout(() => {
+      //     resolve()
+      //     return
+      //   }, 3000)
+      // })
       await getDeviceListApi().then((res) => {
         commit('setDeviceList', res)
       })
@@ -145,14 +156,13 @@ export default {
       // TODO: 数据内容检查, try catch
       let newDevice = newDeviceInfo
       await addDeviceApi(newDeviceInfo).then((res) => {
-        console.log(res.data.id)
-        newDevice = { ...newDevice, id: res.data.id }
+        newDevice = { ...newDevice, id: res.id }
         commit('addDevice', newDevice)
       })
       console.log(`Add device ${JSON.stringify(newDevice)}`)
     },
     async deleteDeviceAction ({ state, commit, dispatch }, listId) {
-      // TODO: delete data sources
+      // TODO: When delete device, I need to delete sensor that binding by this device
       const deviceId = state.deviceList[listId].id
       await deleteDeviceApi(deviceId)
       commit('deleteDevice', { listId, deviceId })
@@ -163,8 +173,16 @@ export default {
       updateDeviceInfo
     ) {
       await modifyDeviceApi(updateDeviceInfo)
-      commit('modifyDevice', updateDeviceInfo)
-      console.log(`Modify device: ${JSON.stringify(updateDeviceInfo)}`)
+      let res = await getDeviceByIdApi(updateDeviceInfo.id)
+      commit('modifyDevice', res)
+      await dispatch('getDeviceStatusAction')
+      console.log(`Modify device: ${JSON.stringify(res)}`)
+    },
+    async getDeviceStatusAction ({ state, dispatch, rootState }) {
+      state.deviceStatusList = []
+      const deviceWithSensorNameList = state.deviceList.map((device) => ({ deviceId: device.id, sensorNameList: device.values.map((sensor) => (sensor.name)) }))
+      await dispatch('getSensorLatestStatusAction', { deviceWithSensorNameList }, { root: true })
+      console.log(state.deviceStatusList)
     }
   }
 }

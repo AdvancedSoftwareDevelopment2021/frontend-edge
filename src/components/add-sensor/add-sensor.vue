@@ -32,13 +32,13 @@
                       </ListItem>
                     </List> -->
                     <Table :columns="tableCols" :data="device.values">
-                      <template slot-scope="{ row, index }" slot="name">
+                      <template slot-scope="{ row }" slot="name">
                         <span>{{ row.name }}</span>
                       </template>
-                      <template slot-scope="{ row, index }" slot="type">
+                      <template slot-scope="{ row }" slot="type">
                         <span>{{ row.type }}</span>
                       </template>
-                      <template slot-scope="{ row, index }" slot="protocol">
+                      <template slot-scope="{ row }" slot="protocol">
                         <span>{{ row.protocol }}</span>
                       </template>
                       <template slot-scope="{ row, index }" slot="action">

@@ -18,10 +18,12 @@ const USER_MAP = {
 
 export const login = req => {
   req = JSON.parse(req.body)
+  // console.log(`login req: ${JSON.stringify(req)}`)
   return { data: { token: USER_MAP[req.userName].token } }
 }
 
 export const getUserInfo = req => {
+  // console.log(`getUserInfo request: ${JSON.stringify(req)}`)
   const params = getParams(req.url)
   return { data: USER_MAP[params.token] }
 }

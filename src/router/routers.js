@@ -80,6 +80,7 @@ export default [
     name: '设备管理',
     component: Main,
     meta: {
+      hideInMenu: false,
       title: '设备管理',
       icon: 'logo-buffer'
     },

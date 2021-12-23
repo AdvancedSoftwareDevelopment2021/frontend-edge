@@ -38,6 +38,9 @@ const showThisMenuEle = (item, access) => {
  * @returns {Array}
  */
 export const getMenuByRouter = (list, access) => {
+  // console.log(`sideMenu routers:`)
+  // console.log(list)
+  // console.log(`user.access: ${access}`)
   let res = []
   forEach(list, item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
