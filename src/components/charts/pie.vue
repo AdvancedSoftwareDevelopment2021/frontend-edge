@@ -41,7 +41,7 @@ export default {
     resize () {
       this.dom.resize()
     },
-    init() {
+    init () {
       this.$nextTick(() => {
         let legend = this.value.map(_ => _.name)
         let option = {

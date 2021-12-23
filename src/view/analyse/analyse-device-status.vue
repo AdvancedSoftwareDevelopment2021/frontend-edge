@@ -68,22 +68,22 @@ export default {
     handleDevice () {
       this.getSensorListAction({ deviceId: this.deviceId })
     },
-    resetDatasource() {
+    resetDatasource () {
       this.dataSource = [
-        { name: 'sleeping',   value: 0 },
-        { name: 'running',    value: 0 },
+        { name: 'sleeping', value: 0 },
+        { name: 'running', value: 0 },
         { name: 'collecting', value: 0 },
-        { name: 'success',    value: 0 },
-        { name: 'failure',    value: 0 }
+        { name: 'success', value: 0 },
+        { name: 'failure', value: 0 }
       ]
     },
     async handleSensor () {
       if (!this.sensorId || this.sensorId === '') return
       await this.getSensorHistoryStatusAction({ sensorId: this.sensorId })
- 
+
       this.resetDatasource()
       let data = this.sensorHistoryStatus
-      data.sort(function(a, b) { return a.timestamp < b.timestamp })
+      data.sort(function (a, b) { return a.timestamp < b.timestamp })
       for (let i = 0; i < data.length - 1; i++) {
         var start = new Date(data[i].timestamp).getTime()
         var end = new Date(data[i + 1].timestamp).getTime()
