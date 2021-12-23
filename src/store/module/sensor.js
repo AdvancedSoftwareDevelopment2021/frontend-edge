@@ -6,7 +6,8 @@ import {
   sensorMonitorStopCommandApi,
   sensorMonitorStartCommandApi,
   getSensorAllHistoryDataApi,
-  getSensorLatestStatusApi
+  getSensorLatestStatusApi,
+  getSensorAllHistoryStatusApi
 } from '@/api/sensor'
 
 // TODO: 可能要做Number和String的转换
@@ -93,7 +94,8 @@ export default {
       }
     ],
     allHistoryDataList: [],
-    sensorHistoryData: []
+    sensorHistoryData: [],
+    sensorHistoryStatus: []
   },
   mutations: {
     setSensorList (state, sensorList) {
@@ -101,6 +103,9 @@ export default {
     },
     setSensorHistoryData (state, sensorHistoryData) {
       state.sensorHistoryData = sensorHistoryData
+    },
+    setSensorHistoryStatus (state, sensorHistoryStatus) {
+      state.sensorHistoryStatus = sensorHistoryStatus
     },
     setSensorAllHistoryData (state, { sensorName, allHistoryDataList }) {
       if (!state.allHistoryDataList.some((c) => c.sensorName === sensorName)) {
@@ -128,6 +133,16 @@ export default {
           commit('setSensorHistoryData', res)
         }).catch(e => {
           commit('setSensorHistoryData', [])
+          console.log(e)
+        })
+    },
+    async getSensorHistoryStatusAction (
+      { commit }, { sensorId }) {
+      await getSensorAllHistoryStatusApi({ sensorId })
+        .then((res) => {
+          commit('setSensorHistoryStatus', res)
+        }).catch(e => {
+          commit('setSensorHistoryStatus', [])
           console.log(e)
         })
     },

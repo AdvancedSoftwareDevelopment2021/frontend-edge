@@ -13,11 +13,11 @@
       </Select>
     </Card>
     <Card shadow style="margin-top:20px">
-      <chart-gradient
+      <chart-pie
         style="height:600px"
         :value="dataSource"
         :text="getChartName()"
-      />
+      ></chart-pie>
     </Card>
   </div>
 </template>
@@ -44,17 +44,18 @@ export default {
     ...mapState({
       deviceList: (state) => state.device.deviceList,
       sensorList: (state) => state.sensor.sensorList,
-      sensorHistoryData: (state) => state.sensor.sensorHistoryData
+      sensorHistoryStatus: (state) => state.sensor.sensorHistoryStatus
     })
   },
   mounted () {
     this.getDeviceListAction()
+    this.resetDatasource()
   },
   methods: {
     ...mapActions([
       'getDeviceListAction',
       'getSensorListAction',
-      'getSensorHistoryDataAction'
+      'getSensorHistoryStatusAction'
     ]),
     getChartName () {
       let sensors = this.sensorList.filter(item => item.id === this.sensorId)
@@ -67,13 +68,28 @@ export default {
     handleDevice () {
       this.getSensorListAction({ deviceId: this.deviceId })
     },
+    resetDatasource() {
+      this.dataSource = [
+        { name: 'sleeping',   value: 0 },
+        { name: 'running',    value: 0 },
+        { name: 'collecting', value: 0 },
+        { name: 'success',    value: 0 },
+        { name: 'failure',    value: 0 }
+      ]
+    },
     async handleSensor () {
-      if (this.sensorId === '') return
-      let sensor = this.sensorList.filter(item => item.id === this.sensorId)[0]
-      await this.getSensorHistoryDataAction({ deviceId: this.deviceId, sensorName: sensor.name })
-      this.dataSource = this.sensorHistoryData.map((item) => {
-        return [item.timestamp, item.data]
-      })
+      if (!this.sensorId || this.sensorId === '') return
+      await this.getSensorHistoryStatusAction({ sensorId: this.sensorId })
+ 
+      this.resetDatasource()
+      let data = this.sensorHistoryStatus
+      data.sort(function(a, b) { return a.timestamp < b.timestamp })
+      for (let i = 0; i < data.length - 1; i++) {
+        var start = new Date(data[i].timestamp).getTime()
+        var end = new Date(data[i + 1].timestamp).getTime()
+        let item = this.dataSource.filter(item => item.name === data[i].status)[0]
+        item.value += end - start
+      }
     }
   }
 }

@@ -56,3 +56,10 @@ export const getSensorLatestStatusApi = ({ deviceId, sensorName }) => {
     method: 'get'
   })
 }
+
+export const getSensorAllHistoryStatusApi = ({ sensorId }) => {
+  return axios.request({
+    url: `sensor/history/${sensorId}`,
+    method: 'get'
+  })
+}
