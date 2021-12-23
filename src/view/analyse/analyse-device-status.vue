@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { ChartPie, ChartBar, ChartGradient } from "_c/charts";
+import { ChartPie, ChartBar, ChartGradient } from '_c/charts'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -37,7 +37,7 @@ export default {
     return {
       deviceId: '',
       sensorId: '',
-      dataSource: [],
+      dataSource: []
     }
   },
   computed: {
@@ -56,7 +56,7 @@ export default {
       'getSensorListAction',
       'getSensorHistoryDataAction'
     ]),
-    getChartName() {
+    getChartName () {
       let sensors = this.sensorList.filter(item => item.id === this.sensorId)
       if (sensors && sensors.length > 0) {
         return sensors[0].name + '传感器历史状态图'
@@ -64,13 +64,13 @@ export default {
         return '传感器历史状态图'
       }
     },
-    handleDevice() {
-      this.getSensorListAction({deviceId: this.deviceId})
+    handleDevice () {
+      this.getSensorListAction({ deviceId: this.deviceId })
     },
-    async handleSensor() {
-      if(this.sensorId === '') return
+    async handleSensor () {
+      if (this.sensorId === '') return
       let sensor = this.sensorList.filter(item => item.id === this.sensorId)[0]
-      await this.getSensorHistoryDataAction({ deviceId: this.deviceId, sensorName: sensor.name})
+      await this.getSensorHistoryDataAction({ deviceId: this.deviceId, sensorName: sensor.name })
       this.dataSource = this.sensorHistoryData.map((item) => {
         return [item.timestamp, item.data]
       })

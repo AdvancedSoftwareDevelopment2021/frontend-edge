@@ -29,7 +29,7 @@ export default {
         this.init()
       },
       deep: true, // 深度监听
-      immediate: true, // 初次监听即执行  
+      immediate: true // 初次监听即执行
     }
   },
   data () {
@@ -44,10 +44,10 @@ export default {
     off(window, 'resize', this.resize)
   },
   methods: {
-    init() {
+    init () {
       const dateList = this.value.map(function (item) {
         return item[0]
-      });
+      })
       const valueList = this.value.map(function (item) {
         return item[1]
       })
