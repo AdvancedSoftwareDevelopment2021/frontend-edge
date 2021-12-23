@@ -108,11 +108,7 @@ export default {
   methods: {
     handleBtnDevicePageClick () {
       this.$router.push({
-<<<<<<< HEAD
-        name: 'device'
-=======
         name: '设备管理'
->>>>>>> c31fab7c5ac5f157230ba21774d585339bd7b581
       })
     }
   },
