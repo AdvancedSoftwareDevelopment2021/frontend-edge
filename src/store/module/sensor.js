@@ -1,4 +1,5 @@
 import {
+  getSensorListApi,
   addSensorApi,
   sensorStartCommandApi,
   sensorStopCommandApi,
@@ -10,6 +11,7 @@ import {
 // TODO: 可能要做Number和String的转换
 export default {
   state: {
+    sensorList: [],
     sensorFormItem: {
       Modbus: {
         name: '',
@@ -84,9 +86,16 @@ export default {
         label: '月'
       }
     ],
-    allHistoryDataList: []
+    allHistoryDataList: [],
+    sensorHistoryData: []
   },
   mutations: {
+    setSensorList (state, sensorList) {
+      state.sensorList = sensorList
+    },
+    setSensorHistoryData (state, sensorHistoryData) {
+      state.sensorHistoryData = sensorHistoryData
+    },
     setSensorAllHistoryData (state, { sensorName, allHistoryDataList }) {
       if (!state.allHistoryDataList.some(c => c.sensorName === sensorName)) {
         state.allHistoryDataList.push({ sensorName, historyDataList: allHistoryDataList })
@@ -97,6 +106,22 @@ export default {
     }
   },
   actions: {
+    async getSensorListAction ({ commit }, { deviceId }) {
+      await getSensorListApi({ deviceId }).then((res) => {
+        commit('setSensorList', res)
+      })
+      console.log('Get sensorList from DB')
+    },
+    async getSensorHistoryDataAction (
+      { commit }, { deviceId, sensorName }) {
+      await getSensorAllHistoryDataApi({ deviceId, sensorName })
+        .then((res) => {
+          commit('setSensorHistoryData', res)
+        }).catch(e => {
+          commit('setSensorHistoryData', [])
+          console.log(e)
+        })
+    },
     async addSensorAction (
       { state },
       { deviceId, newSensor }

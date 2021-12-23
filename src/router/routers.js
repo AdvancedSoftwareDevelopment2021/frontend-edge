@@ -132,7 +132,7 @@ export default [
           title: '采集数据',
           icon: 'logo-buffer'
         },
-        component: () => import('@/view/analyse/analyse.vue')
+        component: () => import('@/view/analyse/analyse-device-data.vue')
       },
       {
         path: '/analyse/status',
@@ -141,7 +141,7 @@ export default [
           title: '设备状态',
           icon: 'logo-buffer'
         },
-        component: () => import('@/view/analyse/analyse-device-data.vue')
+        component: () => import('@/view/analyse/analyse-device-status.vue')
       }
     ]
   }
