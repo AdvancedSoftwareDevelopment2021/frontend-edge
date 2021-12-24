@@ -116,5 +116,34 @@ export default [
         props: true
       }
     ]
+  },
+  {
+    path: '/analyse',
+    name: '数据分析',
+    component: Main,
+    meta: {
+      title: '数据分析',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/analyse/data',
+        name: '采集数据',
+        meta: {
+          title: '采集数据',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/analyse/analyse-device-data.vue')
+      },
+      {
+        path: '/analyse/status',
+        name: '设备状态',
+        meta: {
+          title: '设备状态',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/analyse/analyse-device-status.vue')
+      }
+    ]
   }
 ]

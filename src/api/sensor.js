@@ -1,5 +1,12 @@
 import axios from '@/libs/api.request'
 
+export const getSensorListApi = ({ deviceId }) => {
+  return axios.request({
+    url: `sensor/device/${deviceId}`,
+    method: 'get'
+  })
+}
+
 export const addSensorApi = ({ deviceId, newSensor }) => {
   return axios.request({
     url: `sensor/${deviceId}`,
@@ -46,6 +53,13 @@ export const sensorMonitorStopCommandApi = ({ deviceId, sensorId }) => {
 export const getSensorLatestStatusApi = ({ deviceId, sensorName }) => {
   return axios.request({
     url: `device/status/latest/${deviceId}/${sensorName}`,
+    method: 'get'
+  })
+}
+
+export const getSensorAllHistoryStatusApi = ({ sensorId }) => {
+  return axios.request({
+    url: `sensor/history/${sensorId}`,
     method: 'get'
   })
 }

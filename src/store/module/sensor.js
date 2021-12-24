@@ -1,16 +1,19 @@
 import {
+  getSensorListApi,
   addSensorApi,
   sensorStartCommandApi,
   sensorStopCommandApi,
   sensorMonitorStopCommandApi,
   sensorMonitorStartCommandApi,
   getSensorAllHistoryDataApi,
-  getSensorLatestStatusApi
+  getSensorLatestStatusApi,
+  getSensorAllHistoryStatusApi
 } from '@/api/sensor'
 
 // TODO: 可能要做Number和String的转换
 export default {
   state: {
+    sensorList: [],
     sensorFormItem: {
       Modbus: {
         name: '',
@@ -90,9 +93,20 @@ export default {
         label: '月'
       }
     ],
-    allHistoryDataList: []
+    allHistoryDataList: [],
+    sensorHistoryData: [],
+    sensorHistoryStatus: []
   },
   mutations: {
+    setSensorList (state, sensorList) {
+      state.sensorList = sensorList
+    },
+    setSensorHistoryData (state, sensorHistoryData) {
+      state.sensorHistoryData = sensorHistoryData
+    },
+    setSensorHistoryStatus (state, sensorHistoryStatus) {
+      state.sensorHistoryStatus = sensorHistoryStatus
+    },
     setSensorAllHistoryData (state, { sensorName, allHistoryDataList }) {
       if (!state.allHistoryDataList.some((c) => c.sensorName === sensorName)) {
         state.allHistoryDataList.push({
@@ -106,7 +120,36 @@ export default {
     }
   },
   actions: {
-    async addSensorAction ({ state }, { deviceId, newSensor }) {
+    async getSensorListAction ({ commit }, { deviceId }) {
+      await getSensorListApi({ deviceId }).then((res) => {
+        commit('setSensorList', res)
+      })
+      console.log('Get sensorList from DB')
+    },
+    async getSensorHistoryDataAction (
+      { commit }, { deviceId, sensorName }) {
+      await getSensorAllHistoryDataApi({ deviceId, sensorName })
+        .then((res) => {
+          commit('setSensorHistoryData', res)
+        }).catch(e => {
+          commit('setSensorHistoryData', [])
+          console.log(e)
+        })
+    },
+    async getSensorHistoryStatusAction (
+      { commit }, { sensorId }) {
+      await getSensorAllHistoryStatusApi({ sensorId })
+        .then((res) => {
+          commit('setSensorHistoryStatus', res)
+        }).catch(e => {
+          commit('setSensorHistoryStatus', [])
+          console.log(e)
+        })
+    },
+    async addSensorAction (
+      { state },
+      { deviceId, newSensor }
+    ) {
       if (newSensor.dataCollector.type === 'WebSocket') {
         newSensor.dataCollector.uri =
           newSensor.dataCollector.uri + '/' + deviceId

@@ -19,6 +19,7 @@ const turnTo = (to, access, next) => {
   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 }
 
+// 用下面那块替换这一块
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
   const token = getToken()
@@ -61,6 +62,33 @@ router.beforeEach((to, from, next) => {
     })
   }
 })
+
+// // 修改这部分代码
+// if (store.state.user.hasGetInfo && store.state.app.hasGetRouter) {
+//   turnTo(to, store.state.user.access, next)
+// } else {
+//   // 加载用户信息
+//   store.dispatch('getUserInfo').then(user => {
+//     // 加载用户菜单
+//     store.dispatch('getRouters').then(routers => {
+//       // commonRoutes需要追加到路由解析最后的404，把原先的routers.js中的404删掉即可
+//       router.addRoutes(routers.concat([
+//         {
+//           path: '*',
+//           name: 'error_404',
+//           meta: {
+//             hideInMenu: true
+//           },
+//           component: () => import('@/view/error-page/404.vue')
+//         }
+//       ]))
+//       next({ ...to })
+//     })
+//   }).catch(() => {
+//     setToken('')
+//     next({ name: 'login' })
+//   })
+// }
 
 router.afterEach(to => {
   setTitle(to, router.app)
