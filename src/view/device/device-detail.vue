@@ -61,7 +61,7 @@
           </Col>
           <Col span="1">
             <div>
-              <Badge :status="handleSensorStatus(item.name)" />
+              <Badge :status="handleSensorStatus(item.sensorId)" />
             </div>
           </Col>
         </Row>
@@ -232,22 +232,28 @@ export default {
       // TODO: 现在每次submit后会返回设备管理页面，然后设备管理页面会重新发请求从数据库取得数据
       this.$router.go(-1)
     },
-    handleSensorStatus (sensorName) {
+    handleSensorStatus (sensorId) {
       // console.log(sensorName)
       // console.log(this.formItem.id)
       // FIXME: 返回到device页面时也会调用这函数，但此时this.formItem, sensorName都为null，故没有sensor.sensorStatus
       let ret = ''
-      if (sensorName && this.formItem.id) {
-        let deviceStatus = this.deviceStatusList.find(
-          (deviceStatus) => deviceStatus.deviceId === this.formItem.id
+      if (this.formItem.id) {
+        let deviceWithStatus = this.deviceStatusList.find(
+          (deviceWithStatus) => deviceWithStatus.deviceId === this.formItem.id
         )
-        let sensor = deviceStatus.sensor.find(
-          (sensor) => sensor.sensorName === sensorName
+        let sensor = deviceWithStatus.sensor.find(
+          (sensor) => sensor.sensorId === sensorId
         )
         if (sensor.sensorStatus === 'failure') {
           ret = 'error'
         } else if (sensor.sensorStatus === 'sleeping') {
           ret = 'success'
+        } else if (
+          sensor.sensorStatus === 'success' ||
+          sensor.sensorStatus === 'running' ||
+          sensor.sensorStatus === 'collecting'
+        ) {
+          ret = 'processing'
         }
         console.log(sensor.sensorStatus)
       }
