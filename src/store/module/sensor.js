@@ -10,6 +10,8 @@ import {
   getSensorAllHistoryStatusApi
 } from '@/api/sensor'
 
+import { SENSOR_STATUS } from '../../libs/constants'
+
 // TODO: 可能要做Number和String的转换
 export default {
   state: {
@@ -152,7 +154,7 @@ export default {
       console.log(
         `Add sensor deviceId: ${deviceId}, sensorName: ${newSensor.name}}`
       )
-      // FIXME: vuex找不到device的actions getDeviceListAction
+      // NOTE: vuex找不到device的actions getDeviceListAction
       // 只要 dispatch('getDeviceListAction', {}, {root: true})就可以了
       //   await dispatch('device/getDeviceListAction', {}, {root: true})
     },
@@ -223,21 +225,46 @@ export default {
       for (let { deviceId, sensorIdList } of deviceWithSensorIdList) {
         let sensor = []
         for (let sensorId of sensorIdList) {
-          try {
-            let res = await getSensorLatestStatusApi({ deviceId, sensorId })
-            let status = res.status
-            if (!status) {
-              status = 'failure'
+          if (sensorId === null) {
+            sensor.push({ sensorId, sensorStatus: SENSOR_STATUS.UNBOUND })
+          } else {
+            try {
+              let res = await getSensorLatestStatusApi({ deviceId, sensorId })
+              let status = res.status
+              if (!status) {
+                status = SENSOR_STATUS.FAILURE
+              }
+              sensor.push({ sensorId, sensorStatus: status })
+            } catch (e) {
+              sensor.push({ sensorId, sensorStatus: SENSOR_STATUS.FAILURE })
             }
-            sensor.push({ sensorId, sensorStatus: status })
-          } catch (e) {
-            sensor.push({ sensorId, sensorStatus: 'failure' })
           }
         }
         // console.log({ deviceId, sensor: sensor })
         commit('setDeviceStatus', { deviceId, sensor: sensor }, { root: true })
       }
       console.log(`Get all device status`)
+    },
+    async getSensorLatestStatusByIdAction (
+      { state, commit, rootState },
+      { deviceId, sensorId }
+    ) {
+      try {
+        let res = await getSensorLatestStatusApi({ sensorId })
+        let status = res.status
+        if (!status) {
+          status = SENSOR_STATUS.FAILURE
+        }
+        let deviceStatus = rootState.device.deviceStatusList.find(
+          (item) => (item.deviceId === deviceId)
+        )
+        let sensorListIndex = deviceStatus.sensor.findIndex(
+          (item) => item.sensorId === sensorId
+        )
+        deviceStatus.sensor[sensorListIndex].sensorStatus = status
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
