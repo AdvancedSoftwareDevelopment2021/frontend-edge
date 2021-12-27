@@ -147,19 +147,18 @@ export default {
       //     return
       //   }, 3000)
       // })
-      await getDeviceListApi().then((res) => {
-        commit('setDeviceList', res)
-      })
+      let res = await getDeviceListApi()
+      commit('setDeviceList', res)
       console.log('Get deviceList from DB')
     },
     async addDeviceAction ({ state, commit, getters, dispatch }, newDeviceInfo) {
       // TODO: 数据内容检查, try catch
-      let newDevice = newDeviceInfo
-      await addDeviceApi(newDeviceInfo).then((res) => {
-        newDevice = { ...newDevice, id: res.id }
-        commit('addDevice', newDevice)
-      })
+      // let newDevice = newDeviceInfo
+      let newDevice = await addDeviceApi(newDeviceInfo)
+      // newDevice = { ...newDevice, id: res.id }
+      commit('addDevice', newDevice)
       console.log(`Add device ${JSON.stringify(newDevice)}`)
+      await dispatch('getDeviceStatusAction')
     },
     async deleteDeviceAction ({ state, commit, dispatch }, listId) {
       // TODO: When delete device, I need to delete sensor that binding by this device
@@ -180,9 +179,7 @@ export default {
     },
     async getDeviceStatusAction ({ state, dispatch, rootState }) {
       state.deviceStatusList = []
-      const deviceWithSensorNameList = state.deviceList.map((device) => ({ deviceId: device.id, sensorNameList: device.values.map((sensor) => (sensor.name)) }))
-      await dispatch('getSensorLatestStatusAction', { deviceWithSensorNameList }, { root: true })
-      console.log(state.deviceStatusList)
+      await dispatch('getSensorLatestStatusAction', {}, { root: true })
     }
   }
 }

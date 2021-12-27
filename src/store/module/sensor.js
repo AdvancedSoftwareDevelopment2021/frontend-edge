@@ -10,6 +10,8 @@ import {
   getSensorAllHistoryStatusApi
 } from '@/api/sensor'
 
+import { SENSOR_STATUS } from '../../libs/constants'
+
 // TODO: 可能要做Number和String的转换
 export default {
   state: {
@@ -121,35 +123,29 @@ export default {
   },
   actions: {
     async getSensorListAction ({ commit }, { deviceId }) {
-      await getSensorListApi({ deviceId }).then((res) => {
-        commit('setSensorList', res)
-      })
+      let res = await getSensorListApi({ deviceId })
+      commit('setSensorList', res)
       console.log('Get sensorList from DB')
     },
-    async getSensorHistoryDataAction (
-      { commit }, { deviceId, sensorName }) {
-      await getSensorAllHistoryDataApi({ deviceId, sensorName })
-        .then((res) => {
-          commit('setSensorHistoryData', res)
-        }).catch(e => {
-          commit('setSensorHistoryData', [])
-          console.log(e)
-        })
+    async getSensorHistoryDataAction ({ commit }, { deviceId, sensorName }) {
+      try {
+        let res = await getSensorAllHistoryDataApi({ deviceId, sensorName })
+        commit('setSensorHistoryData', res)
+      } catch (e) {
+        commit('setSensorHistoryData', [])
+        console.log(e)
+      }
     },
-    async getSensorHistoryStatusAction (
-      { commit }, { sensorId }) {
-      await getSensorAllHistoryStatusApi({ sensorId })
-        .then((res) => {
-          commit('setSensorHistoryStatus', res)
-        }).catch(e => {
-          commit('setSensorHistoryStatus', [])
-          console.log(e)
-        })
+    async getSensorHistoryStatusAction ({ commit }, { sensorId }) {
+      try {
+        let res = await getSensorAllHistoryStatusApi({ sensorId })
+        commit('setSensorHistoryStatus', res)
+      } catch (e) {
+        commit('setSensorHistoryStatus', [])
+        console.log(e)
+      }
     },
-    async addSensorAction (
-      { state },
-      { deviceId, newSensor }
-    ) {
+    async addSensorAction ({ state }, { deviceId, newSensor }) {
       if (newSensor.dataCollector.type === 'WebSocket') {
         newSensor.dataCollector.uri =
           newSensor.dataCollector.uri + '/' + deviceId
@@ -158,7 +154,7 @@ export default {
       console.log(
         `Add sensor deviceId: ${deviceId}, sensorName: ${newSensor.name}}`
       )
-      // FIXME: vuex找不到device的actions getDeviceListAction
+      // NOTE: vuex找不到device的actions getDeviceListAction
       // 只要 dispatch('getDeviceListAction', {}, {root: true})就可以了
       //   await dispatch('device/getDeviceListAction', {}, {root: true})
     },
@@ -202,45 +198,73 @@ export default {
       { commit },
       { deviceId, sensorId, sensorName }
     ) {
-      await getSensorAllHistoryDataApi({ deviceId, sensorName })
-        .then((res) => {
-          console.log(res)
-          commit('setSensorAllHistoryData', {
-            sensorName,
-            allHistoryDataList: res
-          })
+      try {
+        let res = await getSensorAllHistoryDataApi({ deviceId, sensorName })
+        console.log(res)
+        commit('setSensorAllHistoryData', {
+          sensorName,
+          allHistoryDataList: res
         })
-        .catch((e) => {
-          commit('setSensorAllHistoryData', {
-            sensorName,
-            allHistoryDataList: []
-          })
+      } catch (e) {
+        console.log(e)
+        commit('setSensorAllHistoryData', {
+          sensorName,
+          allHistoryDataList: []
         })
+      }
+
       console.log(`Get ${sensorName} sensor all history data`)
     },
-    async getSensorLatestStatusAction (
-      { state, commit },
-      { deviceWithSensorNameList }
-    ) {
-      for (let { deviceId, sensorNameList } of deviceWithSensorNameList) {
+    async getSensorLatestStatusAction ({ state, commit, rootState }) {
+      const deviceWithSensorIdList = rootState.device.deviceList.map(
+        (device) => ({
+          deviceId: device.id,
+          sensorIdList: device.values.map((sensor) => sensor.sensorId)
+        })
+      )
+      for (let { deviceId, sensorIdList } of deviceWithSensorIdList) {
         let sensor = []
-        for (let sensorName of sensorNameList) {
-          await getSensorLatestStatusApi({ deviceId, sensorName })
-            .then((res) => {
+        for (let sensorId of sensorIdList) {
+          if (sensorId === null) {
+            sensor.push({ sensorId, sensorStatus: SENSOR_STATUS.UNBOUND })
+          } else {
+            try {
+              let res = await getSensorLatestStatusApi({ deviceId, sensorId })
               let status = res.status
               if (!status) {
-                status = 'failure'
+                status = SENSOR_STATUS.FAILURE
               }
-              sensor.push({ sensorName, sensorStatus: status })
-            })
-            .catch(() => {
-              sensor.push({ sensorName, sensorStatus: 'failure' })
-            })
+              sensor.push({ sensorId, sensorStatus: status })
+            } catch (e) {
+              sensor.push({ sensorId, sensorStatus: SENSOR_STATUS.FAILURE })
+            }
+          }
         }
         // console.log({ deviceId, sensor: sensor })
         commit('setDeviceStatus', { deviceId, sensor: sensor }, { root: true })
       }
       console.log(`Get all device status`)
+    },
+    async getSensorLatestStatusByIdAction (
+      { state, commit, rootState },
+      { deviceId, sensorId }
+    ) {
+      try {
+        let res = await getSensorLatestStatusApi({ sensorId })
+        let status = res.status
+        if (!status) {
+          status = SENSOR_STATUS.FAILURE
+        }
+        let deviceStatus = rootState.device.deviceStatusList.find(
+          (item) => (item.deviceId === deviceId)
+        )
+        let sensorListIndex = deviceStatus.sensor.findIndex(
+          (item) => item.sensorId === sensorId
+        )
+        deviceStatus.sensor[sensorListIndex].sensorStatus = status
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }

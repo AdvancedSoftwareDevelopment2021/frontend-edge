@@ -50,9 +50,10 @@ export const sensorMonitorStopCommandApi = ({ deviceId, sensorId }) => {
   })
 }
 
-export const getSensorLatestStatusApi = ({ deviceId, sensorName }) => {
+export const getSensorLatestStatusApi = ({ deviceId, sensorId }) => {
+  // console.log(sensorId)
   return axios.request({
-    url: `device/status/latest/${deviceId}/${sensorName}`,
+    url: `sensor/latest/${sensorId}`,
     method: 'get'
   })
 }
