@@ -87,6 +87,9 @@ export default {
         }
       })
       return sensorList
+    },
+    deviceListWithIdAndName (state) {
+      return state.deviceList.map(item => ({ name: item.name, id: item.id }))
     }
   },
   mutations: {

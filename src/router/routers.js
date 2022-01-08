@@ -145,5 +145,38 @@ export default [
         component: () => import('@/view/analyse/analyse-device-status.vue')
       }
     ]
+  },
+  {
+    path: '/process',
+    name: '流程管理',
+    component: Main,
+    meta: {
+      title: '流程管理',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/process/manage',
+        name: '流程管理',
+        meta: {
+          hideInMenu: false,
+          title: '流程管理',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/process/process-management.vue'),
+        props: true
+      },
+      {
+        path: '/process/binding',
+        name: '流程配置',
+        meta: {
+          hideInMenu: true,
+          title: '流程配置',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/process/process-view.vue'),
+        props: true
+      }
+    ]
   }
 ]
