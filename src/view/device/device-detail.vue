@@ -143,24 +143,27 @@
             </Row>
           </template>
         </Table>
+        <Row :gutter="8" type="flex" justify="end" style="margin-top: 10px">
+          <Col>
+            <Button @click="cancelBtnClick">取消</Button>
+          </Col>
+          <Col>
+            <Button type="primary" :loading="loading" @click="confirmBtnClick">
+              确认
+            </Button>
+          </Col>
+        </Row>
       </Card>
-      <Row :gutter="8" type="flex" justify="end">
-        <Col>
-          <Button @click="cancelBtnClick">取消</Button>
-        </Col>
-        <Col>
-          <Button type="primary" :loading="loading" @click="confirmBtnClick">
-            确认
-          </Button>
-        </Col>
-      </Row>
+      <Card class="card">
+        <p slot="title">控制器信息</p>
+        <driver-management :deviceId="this.device.id"></driver-management>
+      </Card>
     </Form>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import deviceInfoForm from '_c/device-info-form'
 import {
   modbusBindingForm,
   zigbeeBindingForm,
@@ -168,6 +171,7 @@ import {
   httpBindingForm
 } from '_c/protocol-binding-form'
 import { SENSOR_STATUS } from '../../libs/constants'
+import DriverManagement from '../driver/driver-management'
 const columns = [
   {
     title: '名称',
@@ -195,7 +199,7 @@ const columns = [
 export default {
   name: 'deviceDetail',
   components: {
-    deviceInfoForm,
+    DriverManagement,
     modbusBindingForm,
     zigbeeBindingForm,
     websocketBindingForm,
@@ -249,8 +253,6 @@ export default {
       this.$router.go(-1)
     },
     handleSensorStatus (sensorId) {
-      // console.log(sensorName)
-      // console.log(this.formItem.id)
       let ret = 'default'
       if (this.formItem.id) {
         let deviceWithStatus = this.deviceStatusList.find(
@@ -278,7 +280,6 @@ export default {
       this.bindingModalControl = true
       this.activeDataSource = item
       this.activeDataSource.listIndex = listIndex
-      // console.log(this.activeDataSource)
     },
     dataSourceBindingCancelBtnClick () {
       this.activeDataSource = {}

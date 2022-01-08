@@ -23,7 +23,7 @@ export default {
           interval: 10,
           unit: 'SECOND'
         },
-        dataCollector: {
+        point: {
           type: 'Modbus',
           ip: '127.0.0.1',
           port: 502,
@@ -37,7 +37,7 @@ export default {
       Canbus: {},
       ZigBee: {
         name: '',
-        dataCollector: {
+        point: {
           type: 'ZigBee',
           serialNumber: 'COM2',
           baudRate: 9600,
@@ -52,7 +52,7 @@ export default {
         //   interval: 1,
         //   unit: 'SECOND'
         // },
-        dataCollector: {
+        point: {
           type: 'WebSocket',
           uri: 'http://localhost:8000/websocket'
         }
@@ -63,7 +63,7 @@ export default {
           interval: 1,
           unit: 'SECOND'
         },
-        dataCollector: {
+        point: {
           type: 'Http',
           url: 'http://localhost:8000/getdata'
         }

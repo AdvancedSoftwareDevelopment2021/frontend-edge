@@ -114,6 +114,16 @@ export default [
         },
         component: () => import('@/view/device/device-history-data.vue'),
         props: true
+      },
+      {
+        path: '/device/driver/:id',
+        name: '设备控制器管理',
+        meta: {
+          hideInMenu: true,
+          title: '设备控制器管理'
+        },
+        component: () => import('@/view/driver/command-management.vue'),
+        props: true
       }
     ]
   },
