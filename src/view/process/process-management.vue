@@ -61,9 +61,10 @@ export default {
   },
   methods: {
     ...mapMutations(['setActiveProcess']),
-    ...mapActions(['getAllProcessesAction']),
+    ...mapActions(['getAllProcessesAction', 'getBindingListAction']),
     bindingBtnClick (row) {
       this.setActiveProcess(row.id)
+      this.getBindingListAction()
       this.$router.push({
         path: '/process/binding'
       })

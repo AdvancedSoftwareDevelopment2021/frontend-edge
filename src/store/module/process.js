@@ -1,4 +1,11 @@
-import { getAllProcessesApi, bindingProcessAndDeviceApi } from '@/api/process'
+import {
+  getAllProcessesApi,
+  bindingProcessAndDeviceApi,
+  cancelBindingProcessAndDeviceApi,
+  getBindingListApi,
+  processStopApi,
+  processStartApi
+} from '@/api/process'
 
 export default {
   state: {
@@ -12,7 +19,8 @@ export default {
     // status: "CONSTRUCTING"
     // step: "DEVICE"
     processList: [],
-    activeProcess: {}
+    activeProcess: {},
+    activeBindingList: []
   },
   mutations: {
     setActiveElement (state, element) {
@@ -26,6 +34,9 @@ export default {
       state.activeProcess = process
       // console.log(state.activeProcess)
     }
+    // setActiveProcessBindingList(state, bindingList) {
+    //     state.activeProcess.bindingList = bindingList;
+    // }
   },
   actions: {
     async getAllProcessesAction ({ state }) {
@@ -33,7 +44,7 @@ export default {
       state.processList = res
       console.log(`Get All processes from DB`)
     },
-    async bindingDeviceAction ({ state }, { device }) {
+    async bindingDeviceAction ({ state, dispatch }, { device }) {
       // const processId = state.businessObject.parent.id
       // TODO: process id
       const processId = state.activeProcess.id
@@ -44,6 +55,30 @@ export default {
       console.log(
         `Binding process id: ${processId}, task id: ${taskId}, device id: ${deviceId}`
       )
+      dispatch('getBindingListAction')
+    },
+    async cancelBindingDeviceAction ({ state, dispatch }, taskId) {
+      const processId = state.activeProcess.id
+      await cancelBindingProcessAndDeviceApi({ processId, taskId })
+      console.log(
+        `Cancel binding process id: ${processId}, task id: ${taskId}`
+      )
+      dispatch('getBindingListAction')
+    },
+    async getBindingListAction ({ state }) {
+      const processId = state.activeProcess.id
+      let res = await getBindingListApi(processId)
+      // console.log(res)
+      state.activeBindingList = res
+    },
+    async processStopAction ({ state }) {
+      const processId = state.activeProcess.id
+      await processStopApi(processId)
+    },
+    async processStartAction ({ state }) {
+      const processId = state.activeProcess.id
+      const number = 5
+      await processStartApi(processId, number)
     }
   }
 }

@@ -1,14 +1,57 @@
 <template>
-  <div class="containers">
-    <div class="canvas" ref="canvas" />
-    <!-- <panel v-if="bpmnModeler" :modeler="bpmnModeler" /> -->
-    <div class="toolbar">
-      <a title="download">下载</a>
-      <a ref="saveDiagram" href="javascript:" title="download BPMN diagram"
-        >BPMN</a
-      >
-      <a ref="saveSvg" href="javascript:" title="download as SVG image">SVG</a>
-      <!-- <div v-if="modal">Hello</div> -->
+  <div>
+    <div class="containers" style="height: 500px; width: 1000px">
+      <!-- <Row>
+        <Col span="20"> -->
+      <div class="canvas" ref="canvas" />
+      <!-- <panel v-if="bpmnModeler" :modeler="bpmnModeler" /> -->
+      <div class="toolbar">
+        <a title="download">下载</a>
+        <a ref="saveDiagram" href="javascript:" title="download BPMN diagram"
+          >BPMN</a
+        >
+        <a ref="saveSvg" href="javascript:" title="download as SVG image"
+          >SVG</a
+        >
+      </div>
+      <!-- </Col>
+      </Row> -->
+      <!-- <Row>
+        <Col span="20"> -->
+      <Table border :columns="columns" :data="bindingList">
+        <template slot-scope="{ row }" slot="taskName">
+          <strong>{{ row.taskName }}</strong>
+        </template>
+        <template slot-scope="{ row }" slot="action">
+          <Row>
+            <Col span="24">
+              <Button
+                type="error"
+                size="small"
+                @click="cancelBindingBtnClick(row)"
+              >
+                取消绑定
+              </Button>
+            </Col>
+          </Row>
+        </template>
+      </Table>
+      <!-- </Col>
+      </Row> -->
+      <Row :gutter="8" type="flex" justify="end">
+        <Col>
+          <Button @click="processStopBtnClick">结束流程</Button>
+        </Col>
+        <Col>
+          <Button
+            type="primary"
+            :loading="loading"
+            @click="processStartBtnClick"
+          >
+            开始流程
+          </Button>
+        </Col>
+      </Row>
     </div>
     <Modal v-model="modal" title="绑定设备" footer-hide :closable="false">
       <Form ref="bindingForm" :model="bindingForm" :label-width="80">
@@ -48,10 +91,28 @@ import BpmData from './BpmData'
 // import BpmnViewer from 'bpmn-js/lib/NavigatedViewer';
 import customControlsModule from './bindingDeviceEvent'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+
+const columns = [
+  {
+    title: '任务名称',
+    slot: 'taskName'
+  },
+  {
+    title: '设备名称',
+    key: 'deviceName'
+  },
+  {
+    title: '操作',
+    slot: 'action',
+    align: 'center'
+  }
+]
+
 export default {
   name: 'bpmnGraph',
   data () {
     return {
+      columns,
       bpmnModeler: null,
       element: null,
       bpmData: new BpmData(),
@@ -60,20 +121,49 @@ export default {
       bindingDevice: {}
     }
   },
-  components: {
-    // panel,
-  },
   computed: {
     ...mapState({
       activeElement: (state) => state.process.activeElement,
       modal: (state) => state.process.modal,
-      activeProcess: (state) => state.process.activeProcess
+      activeProcess: (state) => state.process.activeProcess,
+      activeBindingList: (state) => state.process.activeBindingList
     }),
-    ...mapGetters(['deviceListWithIdAndName'])
+    ...mapGetters(['deviceListWithIdAndName']),
+    bindingList () {
+      console.log('Hello')
+      console.log(this.activeBindingList)
+      if (
+        this.activeBindingList === null ||
+        this.activeBindingList.length <= 0
+      ) {
+        return []
+      }
+      let ret = this.activeBindingList.filter((item) => item.deviceId !== null)
+      if (ret === null || ret.length <= 0) {
+        return []
+      }
+      ret = ret.map((item) => {
+        let deviceName = JSON.parse(item.deviceId).name
+        return {
+          taskName: item.taskName,
+          deviceName: deviceName,
+          taskId: item.taskId
+        }
+      })
+      console.log(ret)
+      //   console.log(this.activeProcess.bindingList[0]);
+      //   console.log(ret);
+      return ret === null ? [] : ret
+    }
   },
   methods: {
     ...mapMutations(['setProcessModal']),
-    ...mapActions(['bindingDeviceAction']),
+    ...mapActions([
+      'bindingDeviceAction',
+      'cancelBindingDeviceAction',
+      'processStopAction',
+      'processStartAction'
+    ]),
     createNewDiagram () {
       const bpmnXmlStr = this.activeProcess.bpmn
       // 将字符串转换成图显示出来
@@ -167,10 +257,20 @@ export default {
       this.setProcessModal(false)
       this.bindingDeviceAction({ device: this.bindingDevice })
       //   console.log(this.bindingDevice);
+    },
+    cancelBindingBtnClick (row) {
+      console.log(row)
+      this.cancelBindingDeviceAction(row.taskId)
+    },
+    processStopBtnClick () {
+      this.processStopAction()
+    },
+    processStartBtnClick () {
+      this.processStartAction()
     }
   },
   mounted () {
-    console.log(this.deviceListWithIdAndName)
+    // console.log(this.deviceListWithIdAndName);
     const canvas = this.$refs.canvas
     // 生成实例
     this.bpmnModeler = new BpmnModeler({
