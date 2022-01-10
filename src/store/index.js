@@ -5,6 +5,7 @@ import user from './module/user'
 import app from './module/app'
 import device from './module/device'
 import sensor from './module/sensor'
+import process from './module/process'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     user,
     app,
     device,
-    sensor
+    sensor,
+    process
   }
 })
