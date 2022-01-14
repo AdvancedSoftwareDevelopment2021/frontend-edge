@@ -21,7 +21,15 @@
         </Row>
         <Row>
           <FormItem label="命令类型">
-            <Input v-model="commandType" disabled></Input>
+            <Select v-model="command.commandType">
+              <Option
+                v-for="item in commandTypeList"
+                :value="item.value"
+                :key="item.value"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
           </FormItem>
         </Row>
         <Row>
@@ -94,6 +102,45 @@
             </Row>
           </FormItem>
         </div>
+        <div v-if="command.commandType === 'ML'">
+          <FormItem label="绑定模型">
+            <Row :gutter="10">
+              <Col>
+                <Select v-model="command.mlId">
+                  <Option
+                    v-for="item in mlModalList"
+                    :value="item.id"
+                    :key="item.id"
+                  >
+                    {{ item.name }}
+                  </Option>
+                </Select>
+              </Col>
+            </Row>
+          </FormItem>
+          <FormItem label="阈值">
+            <Row :gutter="10">
+              <Col>
+                <Input v-model="command.threshold" />
+              </Col>
+            </Row>
+          </FormItem>
+          <FormItem label="低于阈值的联动设备">
+            <Row :gutter="10">
+              <Col>
+                <Select v-model="command.relatedDeviceId">
+                  <Option
+                    v-for="item in deviceList"
+                    :value="item.id"
+                    :key="item.id"
+                  >
+                    {{ item.name }}
+                  </Option>
+                </Select>
+              </Col>
+            </Row>
+          </FormItem>
+        </div>
         <Row :gutter="8" type="flex" justify="end">
           <Col>
             <Button @click="cancelBtnClick">取消</Button>
@@ -118,6 +165,8 @@
 
 <script>
 import { getDriverById, updateDriver } from '@/api/driver'
+import { getMLModal } from '@/api/ml'
+import { getDeviceListApi } from '@/api/device'
 import { mapState } from 'vuex'
 import PagedTable from '_c/paged-table'
 const commandTag = [
@@ -148,7 +197,7 @@ export default {
       loading: true,
       isUpdate: false,
       addCommandModalVisible: false,
-      commandType: '',
+      commandTypeList: [],
       driver: null,
       command: {
         name: null,
@@ -157,8 +206,12 @@ export default {
         type: 'String',
         value: '',
         params: [],
-        tag: 'FREE'
+        tag: 'FREE',
+        mlId: null,
+        threshold: null,
+        relatedDeviceId: null
       },
+      deviceList: [],
       commandList: [],
       commandTag,
       columns: [
@@ -199,7 +252,8 @@ export default {
             ]
           )
         }
-      ]
+      ],
+      mlModalList: []
     }
   },
   mounted () {
@@ -225,18 +279,40 @@ export default {
         type: 'String',
         value: '',
         params: [],
-        tag: 'FREE'
+        tag: 'FREE',
+        mlId: null,
+        threshold: null,
+        relatedDeviceId: null
       }
       const id = this.$route.params.id
       this.driver = await getDriverById(id)
+      this.deviceList = await getDeviceListApi()
+      this.deviceList = this.deviceList.filter(c => {
+        return c.id !== this.driver.deviceId
+      })
+      this.mlModalList = await getMLModal()
       this.commandList = this.driver.commands || []
       if (this.driver.point.type === 'Modbus' || this.driver.point.type === 'ZigBee') {
         this.command.commandType = 'PROPERTY'
-        this.commandType = '属性设置'
+        this.commandTypeList = [
+          {
+            value: 'PROPERTY',
+            label: '属性设置'
+          }
+        ]
       }
       if (this.driver.point.type === 'Http') {
         this.command.commandType = 'CUSTOM'
-        this.commandType = '自定义命令'
+        this.commandTypeList = [
+          {
+            value: 'CUSTOM',
+            label: '自定义命令'
+          },
+          {
+            value: 'ML',
+            label: '机器学习'
+          }
+        ]
       }
       this.loading = false
     },
@@ -280,6 +356,17 @@ export default {
       if (this.command.commandType === 'PROPERTY') {
         if (this.command.value === '') {
           this.$Message.error('属性命令参数不能为空')
+          return
+        }
+      }
+      if (this.command.commandType === 'ML') {
+        let numReg = /^\d+(\.\d+)?$/
+        let numRe = new RegExp(numReg)
+        if (this.command.mlId === null || this.command.threshold === null || this.command.relatedDeviceId === null) {
+          this.$Message.error('机器学习模型参数不完整')
+          return
+        } else if (!numRe.test(this.command.threshold)) {
+          this.$Message.error('阈值设置请输入非负浮点数或整数')
           return
         }
       }

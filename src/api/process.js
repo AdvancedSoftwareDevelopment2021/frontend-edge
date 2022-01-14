@@ -31,7 +31,6 @@ export const getBindingListApi = (processId) => {
 }
 
 export const processStopApi = (processId) => {
-  console.log(`/process/${processId}/stop`)
   return axios.request({
     url: `/process/${processId}/stop`,
     method: 'post'
@@ -39,9 +38,15 @@ export const processStopApi = (processId) => {
 }
 
 export const processStartApi = (processId, number) => {
-  console.log(`/process/${processId}/start/${number}`)
   return axios.request({
     url: `/process/${processId}/start/${number}`,
     method: 'post'
+  })
+}
+
+export const deleteProcess = (processId) => {
+  return axios.request({
+    url: `/process/${processId}`,
+    method: 'delete'
   })
 }

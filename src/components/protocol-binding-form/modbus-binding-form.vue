@@ -31,7 +31,7 @@
         <Col span="12">
           <FormItem label="IP地址">
             <Input
-              v-model="newSensorFormItem.dataCollector.ip"
+              v-model="newSensorFormItem.point.ip"
               placeholder="请输入IP地址"
             ></Input>
           </FormItem>
@@ -39,34 +39,26 @@
         <Col span="12">
           <FormItem label="端口">
             <Input
-              v-model="newSensorFormItem.dataCollector.port"
+              v-model="newSensorFormItem.point.port"
               placeholder="请输入端口"
             ></Input>
           </FormItem>
         </Col>
       </Row>
       <Row>
-        <Col span="8">
+        <Col span="12">
           <FormItem label="slaveId">
             <Input
-              v-model="newSensorFormItem.dataCollector.slaveId"
+              v-model="newSensorFormItem.point.slaveId"
               placeholder="请输入slaveId"
             ></Input>
           </FormItem>
         </Col>
-        <Col span="8">
+        <Col span="12">
           <FormItem label="offset">
             <Input
-              v-model="newSensorFormItem.dataCollector.offset"
+              v-model="newSensorFormItem.point.offset"
               placeholder="请输入offset"
-            ></Input>
-          </FormItem>
-        </Col>
-        <Col span="8">
-          <FormItem label="num">
-            <Input
-              v-model="newSensorFormItem.dataCollector.num"
-              placeholder="请输入num"
             ></Input>
           </FormItem>
         </Col>

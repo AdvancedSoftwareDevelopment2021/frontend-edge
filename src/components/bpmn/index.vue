@@ -36,22 +36,6 @@
           </Row>
         </template>
       </Table>
-      <!-- </Col>
-      </Row> -->
-      <Row :gutter="8" type="flex" justify="end">
-        <Col>
-          <Button @click="processStopBtnClick">结束流程</Button>
-        </Col>
-        <Col>
-          <Button
-            type="primary"
-            :loading="loading"
-            @click="processStartBtnClick"
-          >
-            开始流程
-          </Button>
-        </Col>
-      </Row>
     </div>
     <Modal v-model="modal" title="绑定设备" footer-hide :closable="false">
       <Form ref="bindingForm" :model="bindingForm" :label-width="80">
@@ -86,9 +70,7 @@
 
 <script>
 import BpmnModeler from 'bpmn-js/lib/Modeler' // bpmn-js 设计器
-// import panel from './PropertyPanel' // 属性面板
 import BpmData from './BpmData'
-// import BpmnViewer from 'bpmn-js/lib/NavigatedViewer';
 import customControlsModule from './bindingDeviceEvent'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 
@@ -130,7 +112,6 @@ export default {
     }),
     ...mapGetters(['deviceListWithIdAndName']),
     bindingList () {
-      console.log('Hello')
       console.log(this.activeBindingList)
       if (
         this.activeBindingList === null ||
@@ -150,9 +131,6 @@ export default {
           taskId: item.taskId
         }
       })
-      console.log(ret)
-      //   console.log(this.activeProcess.bindingList[0]);
-      //   console.log(ret);
       return ret === null ? [] : ret
     }
   },
@@ -259,14 +237,7 @@ export default {
       //   console.log(this.bindingDevice);
     },
     cancelBindingBtnClick (row) {
-      console.log(row)
       this.cancelBindingDeviceAction(row.taskId)
-    },
-    processStopBtnClick () {
-      this.processStopAction()
-    },
-    processStartBtnClick () {
-      this.processStartAction()
     }
   },
   mounted () {

@@ -6,25 +6,27 @@
         <strong>{{ row.name }}</strong>
       </template>
       <template slot-scope="{ row }" slot="action">
-        <Row>
-          <Col span="8">
-            <Button type="primary" size="small" @click="bindingBtnClick(row)">
+            <Button type="primary" size="small" style='margin-right:1%' @click="bindingBtnClick(row)">
               绑定设备
             </Button>
-          </Col>
-          <Col span="8">
-            <Button type="primary" size="small" @click="updateBtnClick(row)">
-              修改
-            </Button>
-          </Col>
-          <Col span="8">
-            <Button type="error" size="small" @click="deleteBtnClick(row)">
+            <Button type="error" size="small" style='margin-right:1%' @click="deleteBtnClick(row.id)">
               删除
             </Button>
-          </Col>
-        </Row>
+            <Button  size="small" style='margin-right:1%' @click="processStopBtnClick(row.id)">结束流程</Button>
+            <Button
+              type="primary"
+              size="small"
+              @click="processStartBtnClick(row.id)"
+            >
+              开始流程
+            </Button>
       </template>
     </Table>
+    <Modal title="请输入执行次数" v-model="visibleModal" @on-ok="processStartBtnClick2()">
+      <label>
+        <Input v-model="number" placeholder="请输入流程运行次数"></Input>
+      </label>
+    </Modal>
   </div>
 </template>
 
@@ -51,7 +53,10 @@ export default {
   name: 'processManagement',
   data: function () {
     return {
-      columns
+      columns,
+      number: 1,
+      visibleModal: false,
+      processId: null
     }
   },
   computed: {
@@ -61,12 +66,34 @@ export default {
   },
   methods: {
     ...mapMutations(['setActiveProcess']),
-    ...mapActions(['getAllProcessesAction', 'getBindingListAction']),
+    ...mapActions(['getAllProcessesAction', 'getBindingListAction', 'processStopAction',
+      'processStartAction', 'processDeleteAction']),
     bindingBtnClick (row) {
       this.setActiveProcess(row.id)
       this.getBindingListAction()
       this.$router.push({
         path: '/process/binding'
+      })
+    },
+    deleteBtnClick (id) {
+      this.processDeleteAction(id)
+    },
+    processStopBtnClick (id) {
+      this.processStopAction(id).then(() => {
+        this.$Message.success('停止成功')
+      }).catch(e => {
+        this.$Message.error('停止流程失败')
+      })
+    },
+    processStartBtnClick (id) {
+      this.visibleModal = true
+      this.processId = id
+    },
+    processStartBtnClick2 () {
+      this.processStartAction({ id: this.processId, number: this.number }).then(() => {
+        this.$Message.success('开启成功')
+      }).catch(e => {
+        this.$Message.error('启动流程失败')
       })
     }
   },

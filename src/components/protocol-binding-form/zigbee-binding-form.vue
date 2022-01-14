@@ -5,7 +5,7 @@
         <Col span="12">
           <FormItem label="serialNumber">
             <Input
-              v-model="newSensorFormItem.dataCollector.serialNumber"
+              v-model="newSensorFormItem.point.serialNumber"
               placeholder="请输入serialNumber"
             ></Input>
           </FormItem>
@@ -13,7 +13,7 @@
         <Col span="12">
           <FormItem label="baudRate">
             <Input
-              v-model="newSensorFormItem.dataCollector.baudRate"
+              v-model="newSensorFormItem.point.baudRate"
               placeholder="请输入baudRate"
             ></Input>
           </FormItem>
@@ -21,17 +21,9 @@
       </Row>
       <Row>
         <Col span="8">
-          <FormItem label="checkoutBit">
-            <Input
-              v-model="newSensorFormItem.dataCollector.checkoutBit"
-              placeholder="请输入checkoutBit"
-            ></Input>
-          </FormItem>
-        </Col>
-        <Col span="8">
           <FormItem label="dataBit">
             <Input
-              v-model="newSensorFormItem.dataCollector.dataBit"
+              v-model="newSensorFormItem.point.dataBit"
               placeholder="请输入dataBit"
             ></Input>
           </FormItem>
@@ -39,7 +31,7 @@
         <Col span="8">
           <FormItem label="stopBit">
             <Input
-              v-model="newSensorFormItem.dataCollector.stopBit"
+              v-model="newSensorFormItem.point.stopBit"
               placeholder="请输入stopBit"
             ></Input>
           </FormItem>
