@@ -14,10 +14,6 @@
           >SVG</a
         >
       </div>
-      <!-- </Col>
-      </Row> -->
-      <!-- <Row>
-        <Col span="20"> -->
       <Table border :columns="columns" :data="bindingList">
         <template slot-scope="{ row }" slot="taskName">
           <strong>{{ row.taskName }}</strong>
@@ -52,7 +48,10 @@
               </Select>
             </Col>
           </Row>
-        </FormItem>
+          </FormItem>
+          <FormItem label="预计执行时间(单位：秒)">
+            <Input v-model="time" placeholder="请输入预计执行时间（单位：秒）"></Input>
+          </FormItem>
         <Row :gutter="8" type="flex" justify="end">
           <Col>
             <Button @click="cancelBtnClick">取消</Button>
@@ -100,7 +99,8 @@ export default {
       bpmData: new BpmData(),
       loading: false,
       bindingForm: {},
-      bindingDevice: {}
+      bindingDevice: {},
+      time: 100
     }
   },
   computed: {

@@ -4,16 +4,6 @@
       <Col span="2">
         <add-device />
       </Col>
-      <!-- TODO: 实现search 功能 -->
-      <Col span="10">
-        <label>
-          <Input
-            v-model="searchInput"
-            search
-            placeholder="输入设备名字搜索设备"
-          />
-        </label>
-      </Col>
     </Row>
     <Row>
       <Col
