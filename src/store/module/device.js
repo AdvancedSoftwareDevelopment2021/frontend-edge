@@ -31,12 +31,12 @@ export default {
         label: 'Integer'
       },
       {
-        value: 'String',
-        label: 'String'
+        value: 'Double',
+        label: 'Double'
       },
       {
-        value: 'Object',
-        label: 'Object'
+        value: 'String',
+        label: 'String'
       },
       {
         value: 'Boolean',

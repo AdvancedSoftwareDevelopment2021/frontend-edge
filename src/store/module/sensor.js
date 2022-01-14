@@ -30,8 +30,7 @@ export default {
           slaveId: 3,
           offset: 0,
           modbusFunction: 'HOLDING_REGISTER',
-          datatype: 'BINARY',
-          num: 2
+          datatype: 'BINARY'
         }
       },
       Canbus: {},
@@ -41,7 +40,6 @@ export default {
           type: 'ZigBee',
           serialNumber: 'COM2',
           baudRate: 9600,
-          checkoutBit: null,
           dataBit: 8,
           stopBit: 1
         }
@@ -146,9 +144,9 @@ export default {
       }
     },
     async addSensorAction ({ state }, { deviceId, newSensor }) {
-      if (newSensor.dataCollector.type === 'WebSocket') {
-        newSensor.dataCollector.uri =
-          newSensor.dataCollector.uri + '/' + deviceId
+      if (newSensor.point.type === 'WebSocket') {
+        newSensor.point.uri =
+          newSensor.point.uri + '/' + deviceId
       }
       await addSensorApi({ deviceId, newSensor })
       console.log(
@@ -206,7 +204,6 @@ export default {
           allHistoryDataList: res
         })
       } catch (e) {
-        console.log(e)
         commit('setSensorAllHistoryData', {
           sensorName,
           allHistoryDataList: []

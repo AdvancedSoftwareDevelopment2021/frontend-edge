@@ -31,7 +31,7 @@
         <Col span="24">
           <FormItem label="url">
             <Input
-              v-model="newSensorFormItem.dataCollector.url"
+              v-model="newSensorFormItem.point.url"
               placeholder="请输入url"
             ></Input>
           </FormItem>

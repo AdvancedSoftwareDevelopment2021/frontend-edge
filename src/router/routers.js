@@ -124,6 +124,16 @@ export default [
         },
         component: () => import('@/view/driver/command-management.vue'),
         props: true
+      },
+      {
+        path: '/device/driver/:id/history',
+        name: '失败历史管理',
+        meta: {
+          hideInMenu: true,
+          title: '失败历史管理'
+        },
+        component: () => import('@/view/driver/history-management.vue'),
+        props: true
       }
     ]
   },
