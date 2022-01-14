@@ -36,3 +36,10 @@ export const getDriverById = (id) => {
     method: 'get'
   })
 }
+
+export const getDriverHistory = (id, name) => {
+  return axios.request({
+    url: `ml/device/${id}/${name}`,
+    method: 'get'
+  })
+}

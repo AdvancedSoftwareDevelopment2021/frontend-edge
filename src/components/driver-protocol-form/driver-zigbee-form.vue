@@ -18,14 +18,6 @@
           </FormItem>
       </Row>
       <Row>
-          <FormItem label="checkoutBit">
-            <Input
-              v-model="newDriverForm.point.checkoutBit"
-              placeholder="请输入checkoutBit"
-            ></Input>
-          </FormItem>
-      </Row>
-      <Row>
           <FormItem label="dataBit">
             <Input
               v-model="newDriverForm.point.dataBit"

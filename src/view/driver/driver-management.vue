@@ -152,6 +152,17 @@ export default {
                 }
               }
             }, '命令管理'),
+            h('Button', {
+              props: { size: 'small', type: 'primary' },
+              style: {
+                margin: '1%'
+              },
+              on: {
+                click: () => {
+                  this.$router.push(`/device/driver/${row.id}/history`)
+                }
+              }
+            }, '失败结果查看'),
             h(PopConfirmButton, {
               props: {
                 buttonProps: {

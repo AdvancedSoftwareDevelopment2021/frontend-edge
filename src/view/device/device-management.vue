@@ -45,11 +45,11 @@
           <Row type="flex" justify="space-around" style="padding: 10px">
             <Col span="10">
               <Button type="info" long @click="modifyDeviceBtnClick(device.id)">
-                修改设备信息
+                初始化设备信息
               </Button>
               <Modal
                 v-model="modalControl"
-                title="修改设备"
+                title="初始化设备信息"
                 footer-hide
                 :closable="false"
               >

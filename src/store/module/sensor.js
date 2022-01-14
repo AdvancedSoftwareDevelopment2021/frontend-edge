@@ -204,7 +204,6 @@ export default {
           allHistoryDataList: res
         })
       } catch (e) {
-        console.log(e)
         commit('setSensorAllHistoryData', {
           sensorName,
           allHistoryDataList: []
